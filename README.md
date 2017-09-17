@@ -30,8 +30,8 @@
  
     $nig->run($_SERVER['REQUEST_URI']);
 ```
-
  
+  
  - 只蹭代码，不给点赞的都是坏人。
  
  
