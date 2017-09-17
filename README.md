@@ -21,15 +21,20 @@
 
 ```
     include FRAMEWORK_PATH .'Nig.php'; 
-	$nig = \Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Config.php');
-	 
-	$nig->useNode('/', function($req, $res) {
-	    echo  9;
-	    return ;
-	});
+    $nig = \Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Config.php');
+     
+    $nig->useNode('/', function($req, $res) {
+        echo  9;
+        return ;
+    });
  
     $nig->run($_SERVER['REQUEST_URI']);
 ```
 
  
- ......
+ - 只蹭代码，不给点赞的都是坏人。
+ 
+ 
+ 
+ ......待续
+ 
