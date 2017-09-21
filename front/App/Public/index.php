@@ -25,14 +25,13 @@ include FRAMEWORK_PATH .'Nig.php';
 $nig = \Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Config.php');
  
 $nig->useNode('/', function($req, $res) {
-    echo  9;
-    return ;
+    
+    $res->redirect('/main/index');
+    //$nig->run('/main/index'); 
+    return ; 
 });
 
-$nig->useNode('/a', function($req, $res) {
-    echo 8;
-    return ;
-});
+
 
 $nig->useNode('/a/a', function($req, $res) {
     echo 7;
@@ -44,14 +43,15 @@ $nig->useNode('/a/a/a', function($req, $res) {
     return ;
 });
 
-//挂载一个类
-$nig->addNode('App\Controllers\Auth');
-$nig->addNode('App\Controllers\User');
-$nig->addNode('App\Controllers\Api\User');
+$nig->useNode('/a', function($req, $res) {
+    echo 8;
+    return ;
+});
+
 
 //挂载一个方法
 $nig->useNode('/main/index', function($req, $res) {
-     echo 1;
+     echo 123456;
      return ;
 });
  
@@ -83,6 +83,11 @@ for ($i = 100; $i>0; $i--)
         return ;
     });
 }
+
+
+
+$nig->autoNode($_SERVER['REQUEST_URI']);
+
 
 echo $nig->run($_SERVER['REQUEST_URI']);
  

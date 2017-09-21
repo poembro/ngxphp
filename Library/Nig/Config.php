@@ -24,11 +24,11 @@ class Config
     private function __construct($path = NULl)
     {
         $path = $path ? $path : APPLICATION_PATH . 'Config/Config.php';
-        if (!is_file($path))
-        {	
+        if (!file_exists($path))
+        {
             echo '配置文件不存在';
             return ;
-        }   
+        }
         self::$_conf = include_once $path;
     }
  

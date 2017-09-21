@@ -21,6 +21,7 @@ class Node
     public $children;  
     public $handlers; 
     public $name;
+    public $original;
     
     public function __construct()
     {

@@ -20,11 +20,12 @@ use \Nig\View;
 
 class Response
 {
-    private $view;
+    public $view;
+    
     private static $_instance;
  
     private function __construct($path)
-    {  
+    { 
         $this->view = View::getInstance();
         $this->view->setTemplateFolder( APPLICATION_PATH . 'View');
     }
@@ -39,5 +40,9 @@ class Response
         return self::$_instance;
     }
      
+    public function redirect($path)
+    {
+        return  \Nig\Nig::getInstance()->run($path);
+    }
 }
  

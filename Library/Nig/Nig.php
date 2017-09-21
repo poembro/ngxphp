@@ -44,7 +44,7 @@ class Nig
     public static function getInstance($confPath = NULL)
     {
         if (! self::$_instance)
-        {
+        { 
             self::$_instance = new self($confPath);
         }
         
@@ -54,13 +54,13 @@ class Nig
     private static function _parseURL($url)
     {
         $url = strtolower($url);
-        if ($url != '/')
+        if ($url != DS)
         {
-            $segments = explode('/', $url);
+            $segments = explode(DS, $url);
             return array_filter($segments);
         }
         
-        return ['/'];
+        return [DS];
     }
  
     private static function _getNode(array $frags)
@@ -84,38 +84,42 @@ class Nig
     }
      
 
-    private static function _handle(array $stack, $frags)
-    {
-        $last = end($frags); 
-        
+    private static function _handle(array $stack, $current)
+    { 
+        $flag = FALSE;
         foreach ($stack as $k => $node)
         {
-            if (empty($node->handlers) || $node->name != $last)
+            if (empty($node->handlers) || $current != $node->original)
             {
                 continue;
-            } 
+            }
             
             foreach ($node->handlers as $func)
             {
                 try 
-                {
+              {
                     if (is_array($func))
                     {
                         $group = $func[0];
                         $method = $func[1];
-                        return (new $group)->$method(self::$req, self::$res);
+                        (new $group)->$method(self::$req, self::$res); 
+                        continue;
                     }
                     
-                    return $func(self::$req, self::$res);
-                } 
+                    $func(self::$req, self::$res); 
+                }
                 catch (\Exception $e) 
                 {
                     throw new \Exception($e->getMessage());
                 }
+                $flag = TRUE;
             }
         }
-    
-        return 'Not Found!';
+        
+        if (!$flag)
+        {
+            return 'Not Found!';
+        }
     }
     
     public function useNode($url, $func)
@@ -123,45 +127,47 @@ class Nig
         $frags = self::_parseURL($url);
         
         $node = Tree::addNode(Tree::$root, $frags);
-        $node->handlers[] = $func;
+        $node->handlers[] = $func; 
+        $node->original = $url;
     }
     
     public function addNode($class)
     {
-        $group = $class;
-        $methods = get_class_methods($group); 
+        $group = 'App\Controllers\\' . $class;
+        if (!class_exists($group))
+        {
+            return ; 
+        }
         
-        $className = str_replace("\\", "/", substr($class, 15)); 
+        $methods = get_class_methods($group);  
         foreach ($methods as $m)
         {
             if (strncmp($m, '__', 2) === 0)
             {
                 continue;
-            }
-            $url = $className . '/' . $m;  
-            $this->useNode($url, [$group, $m]);
+            } 
+            $this->useNode($class . DS . $m, [$group, $m]);
         }
     }
     
     public function autoNode($url) 
     {
-        if (strpos($url, "/") === NULL)
-        {
-            return ;
-        }
-        $frags = explode('/' , $url);
-        $t = array_filter($frags);
-        $url = implode("\\", array_map("ucfirst", $t));
+        if ($url === DS) return ;  
+        $frags = self::_parseURL($url);  
         
-        $this->addNode('App\Controllers' . $url);
+        if (count($frags) > 1)
+        {
+            array_pop($frags);
+        }
+        $url = implode("\\", array_map("ucfirst", $frags)); 
+        $this->addNode($url);
     }
 
     public function run($current) 
     {
         $frags = self::_parseURL($current);
-        $stack = self::_getNode($frags);  
-        
-        return self::_handle($stack, $frags);   
+        $stack = self::_getNode($frags); 
+        return self::_handle($stack, $current);   
     }
 }
   
@@ -200,7 +206,7 @@ class Import
         {
             return false;
         }
-        $path = self::$_libs[$libName] . join(DS, $params) . '.php';
+        $path = self::$_libs[$libName] . implode(DS, $params) . '.php';
         if (! is_file($path))
         {
             $path = dirname($path);
