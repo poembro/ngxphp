@@ -16,7 +16,37 @@
  */
 namespace Nig;
 
-use \Nig\Node;
+class Node
+{
+    public $children;
+    public $handlers;
+    public $name;
+    public $original;
+
+    public function __construct()
+    {
+        $this->children = [];
+        $this->handlers = [];
+        $this->name = NULL;
+
+        return $this;
+    }
+
+    public function findChild($key)
+    {
+        foreach ($this->children as $node)
+        {
+            if ($key === $node->name)
+            {
+                return $node;
+            }
+        }
+
+        return FALSE;
+    }
+}
+
+
 
 class Tree
 {
