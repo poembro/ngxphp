@@ -50,19 +50,7 @@ class Nig
         
         return self::$_instance;
     }
-    
-    private static function _parseURL($url)
-    {
-        $url = strtolower($url);
-        if ($url != DS)
-        {
-            $segments = explode(DS, $url);
-            return array_filter($segments);
-        }
-        
-        return [DS];
-    }
- 
+
     private static function _getNode(array $frags)
     {
         $parent = Tree::$root;
@@ -84,42 +72,48 @@ class Nig
     }
      
 
-    private static function _handle(array $stack, $current)
-    { 
-        $flag = FALSE;
+    private static function _handle(array $stack, $url)
+    {  
         foreach ($stack as $k => $node)
         {
-            if (empty($node->handlers) || $current != $node->original)
+            if (empty($node->handlers) || strcasecmp($url, $node->original) !== 0)
             {
                 continue;
             }
             
             foreach ($node->handlers as $func)
             {
-                try 
+                try
               {
                     if (is_array($func))
                     {
                         $group = $func[0];
                         $method = $func[1];
-                        (new $group)->$method(self::$req, self::$res); 
-                        continue;
+                        return (new $group)->$method(self::$req, self::$res);  
                     }
                     
-                    $func(self::$req, self::$res); 
+                    return $func(self::$req, self::$res); 
                 }
                 catch (\Exception $e) 
                 {
                     throw new \Exception($e->getMessage());
-                }
-                $flag = TRUE;
+                } 
             }
         }
-        
-        if (!$flag)
+         
+        return 'Not Found!'; 
+    }
+    
+    private static function _parseURL($url)
+    {
+        $url = strtolower($url);
+        if ($url != '/')
         {
-            return 'Not Found!';
+            $segments = explode('/', $url);
+            return array_filter($segments);
         }
+    
+        return ['/'];
     }
     
     public function useNode($url, $func)
@@ -131,13 +125,14 @@ class Nig
         $node->original = $url;
     }
     
-    public function addNode($class)
-    {
-        $group = 'App\Controllers\\' . $class;
+    public function addClassNode($group)
+    { 
         if (!class_exists($group))
         {
             return ; 
-        }
+        } 
+        //去除命名空间
+        $class = implode('/', array_slice(explode("\\", $group), 2));
         
         $methods = get_class_methods($group);  
         foreach ($methods as $m)
@@ -145,22 +140,22 @@ class Nig
             if (strncmp($m, '__', 2) === 0)
             {
                 continue;
-            } 
-            $this->useNode($class . DS . $m, [$group, $m]);
+            }
+            $this->useNode('/' . $class . '/' . $m, [$group, $m]);
         }
     }
     
     public function autoNode($url) 
-    {
-        if ($url === DS) return ;  
+    { 
         $frags = self::_parseURL($url);  
         
-        if (count($frags) > 1)
+        if (count($frags) < 2)
         {
-            array_pop($frags);
+            return ;//必须是控制器+方法组合
         }
+        array_pop($frags);
         $url = implode("\\", array_map("ucfirst", $frags)); 
-        $this->addNode($url);
+        $this->addClassNode('App\Controllers\\'. $url);
     }
 
     public function run($current) 

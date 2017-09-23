@@ -83,9 +83,8 @@ for ($i = 100; $i>0; $i--)
         return ;
     });
 }
-
-
-
+ 
+$_SERVER['REQUEST_URI'] = $_SERVER['argv'][1];
 $nig->autoNode($_SERVER['REQUEST_URI']);
 
 
