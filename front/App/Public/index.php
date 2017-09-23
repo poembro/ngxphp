@@ -76,15 +76,13 @@ $nig->useNode('/nig/app/public/index.php', function($req, $res) {
     return $m->getOne('hello');
 });
 
-for ($i = 100; $i>0; $i--) 
-{
-    $nig->useNode('/Auth'.$i.'/tests'.$i, function($req, $res) {
-        echo $i;
-        return ;
-    });
-}
  
-$_SERVER['REQUEST_URI'] = $_SERVER['argv'][1];
+if (PHP_SAPI === 'cli')
+{
+    //cli方式执行 [root@www Public]# php index.php /api/auth/test
+    $_SERVER['REQUEST_URI'] = $_SERVER['argv'][1];
+} 
+
 $nig->autoNode($_SERVER['REQUEST_URI']);
 
 
