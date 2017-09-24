@@ -64,7 +64,6 @@ class Nig
                 continue;
             }
             $fallbackStack[] = $node; 
-            
             $parent = $node;
         }
         
@@ -133,10 +132,11 @@ class Nig
         {
             return ;//必须是控制器+方法组合
         }
+        
         $method = array_pop($frags);
         $className = implode("\\", array_map("ucfirst", $frags));  
-        
         $group = 'App\Controllers\\' . $className;
+        
         if (!class_exists($group, true))
         {
         	 return ;

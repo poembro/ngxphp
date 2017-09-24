@@ -42,7 +42,7 @@ class Node
             }
         }
 
-        return FALSE;
+        return false;
     }
 }
 

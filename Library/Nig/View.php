@@ -29,6 +29,7 @@ class View
 	    {
 	        self::$_instance = new self();
 	    }
+	    
 	    return self::$_instance;
 	} 
 	
@@ -57,17 +58,22 @@ class View
 	}
  
 	public function fetch($file)
-	{ 
+	{
 		$path = $this->_templateFolder . $file;
+		
 		if (! is_file($path))
 		{
 			throw new \Exception($path . '不存在或者不是一个文件!');
 		}
+		
 		extract($this->_variables, EXTR_SKIP);
 		ob_start();
+		
 		include $path;
+		
 		$this->_cacheContents = ob_get_contents();
 		ob_clean();
+		
 		return $this->_cacheContents;
 	}
 }
