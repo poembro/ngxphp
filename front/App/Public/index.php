@@ -81,11 +81,11 @@ if (PHP_SAPI === 'cli')
 {
     //cli方式执行 [root@www Public]# php index.php /api/auth/test
     $_SERVER['REQUEST_URI'] = $_SERVER['argv'][1];
-} 
+}
 
 $nig->autoNode($_SERVER['REQUEST_URI']);
 
 
 echo $nig->run($_SERVER['REQUEST_URI']);
- 
+echo PHP_EOL;
  

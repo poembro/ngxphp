@@ -84,7 +84,7 @@ class Nig
             foreach ($node->handlers as $func)
             {
                 try
-              {
+                {
                     if (is_array($func))
                     {
                         $group = $func[0];
@@ -125,37 +125,24 @@ class Nig
         $node->original = $url;
     }
     
-    public function addClassNode($group)
-    { 
-        if (!class_exists($group))
-        {
-            return ; 
-        } 
-        //去除命名空间
-        $class = implode('/', array_slice(explode("\\", $group), 2));
-        
-        $methods = get_class_methods($group);  
-        foreach ($methods as $m)
-        {
-            if (strncmp($m, '__', 2) === 0)
-            {
-                continue;
-            }
-            $this->useNode('/' . $class . '/' . $m, [$group, $m]);
-        }
-    }
-    
     public function autoNode($url) 
-    { 
+    {
         $frags = self::_parseURL($url);  
         
         if (count($frags) < 2)
         {
             return ;//必须是控制器+方法组合
         }
-        array_pop($frags);
-        $url = implode("\\", array_map("ucfirst", $frags)); 
-        $this->addClassNode('App\Controllers\\'. $url);
+        $method = array_pop($frags);
+        $className = implode("\\", array_map("ucfirst", $frags));  
+        
+        $group = 'App\Controllers\\' . $className;
+        if (!class_exists($group, true))
+        {
+        	 return ;
+        }
+        
+        $this->useNode($url, [$group, $method]);
     }
 
     public function run($current) 
