@@ -25,54 +25,28 @@ include FRAMEWORK_PATH .'Nig.php';
 $nig = \Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Config.php');
  
 $nig->useNode('/', function($req, $res) {
-    
-    $res->redirect('/main/index');
-    //$nig->run('/main/index'); 
-    return ; 
+    return $res->redirect('/main/index');
 });
 
-    $nig->useNode('/', function($req, $res) {
-    
-        $res->redirect('/a');
-        //$nig->run('/main/index');
-        return ;
-    });
-
 $nig->useNode('/a/a', function($req, $res) {
-    echo 7;
-    return ;
+    return 7;
 });
 
 $nig->useNode('/a/a/a', function($req, $res) {
-    echo 6;
-    return ;
+    return 6;
 });
 
 $nig->useNode('/a', function($req, $res) {
-    echo 8;
-    return ;
+    return 8;
 });
-
 
 //挂载一个方法
 $nig->useNode('/main/index', function($req, $res) {
-     echo 123456;
-     return ;
+     return 123456;
 });
  
 $nig->useNode('/api/user', function($req, $res) {
-     echo 2;
-     return ;
-});
-
-$nig->useNode('/nig/index.php', function($req, $res) {
-	echo 5;
-	return ;
-});
-	
-$nig->useNode('/nig/app/index.php', function($req, $res) {
-	echo 6;
-	return ;
+     return 2;
 });
 
 $nig->useNode('/nig/app/public/index.php', function($req, $res) {
@@ -81,16 +55,17 @@ $nig->useNode('/nig/app/public/index.php', function($req, $res) {
     return $m->getOne('hello');
 });
 
- 
 if (PHP_SAPI === 'cli')
 {
-    //cli方式执行 [root@www Public]# php index.php /api/auth/test
     $_SERVER['REQUEST_URI'] = $_SERVER['argv'][1];
 }
 
+//挂载对应控制器下的方法
 $nig->autoNode($_SERVER['REQUEST_URI']);
 
-
 echo $nig->run($_SERVER['REQUEST_URI']);
-echo PHP_EOL;
- 
+
+//cli方式执行 [root@www Public]# php index.php /api/auth/test
+
+
+
