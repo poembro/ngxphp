@@ -13,6 +13,7 @@
  * @History
  * <author> <time> <version > <desc>
  * poembro 2017-09-17 下午16:30:37 Beta 1.0 第一次建立该文件
+ * poembro 2017-09-29 下午14:49:20 Beta 1.0 url匹配精准度优化
  */
 namespace Nig;
   
@@ -119,7 +120,7 @@ class Nig
     {
         $frags = self::_parseURL($url); 
         $node = Tree::addNode(Tree::$root, $frags); 
-        if (!$node || strcasecmp($url, $node->original) === 0)
+        if (strcasecmp($url, $node->original) === 0)
         {
             return false; 
         }
@@ -133,7 +134,7 @@ class Nig
         
         if (count($frags) < 2)
         {
-            return ;//必须是控制器+方法组合
+            return false;//必须是控制器+方法组合
         }
         
         $method = array_pop($frags);
@@ -142,7 +143,7 @@ class Nig
         
         if (!class_exists($group, true))
         {
-        	 return ;
+        	 return false;
         }
         
         $this->useNode($url, [$group, $method]);
