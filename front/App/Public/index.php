@@ -31,7 +31,12 @@ $nig->useNode('/', function($req, $res) {
     return ; 
 });
 
-
+    $nig->useNode('/', function($req, $res) {
+    
+        $res->redirect('/a');
+        //$nig->run('/main/index');
+        return ;
+    });
 
 $nig->useNode('/a/a', function($req, $res) {
     echo 7;

@@ -30,28 +30,14 @@ class Node
         $this->name = NULL;
 
         return $this;
-    }
-
-    public function findChild($key)
-    {
-        foreach ($this->children as $node)
-        {
-            if ($key === $node->name)
-            {
-                return $node;
-            }
-        }
-
-        return false;
-    }
+    } 
 }
 
 
 
 class Tree
 {
-    public static $root;
-    
+    public static $root; 
     private static $instance;
      
     public static function  getInstance()
@@ -65,23 +51,36 @@ class Tree
         self::$root = new Node();
         
         return self::$instance;
-    }
-    
-    private static function _getOrAdd(Node $parent, $frags)
-    {
-        $node = $parent->findChild($frags);
+    } 
+      
+    public static function getChildNode(Node $node, $segment)
+    { 
+        foreach ($node->children as $it)
+        {
+            if ($segment === $it->name)
+            {
+                return $it;
+            }
+        }
         
-        if ($node) 
+        return false; 
+    }
+
+    private static function _getOrAdd(Node $parent, $segment)
+    {
+        $node = self::getChildNode($parent, $segment);
+    
+        if ($node)
         {
             return $node;
         }
-        
+    
         $node = clone $parent;
         $node->children = [];
         $node->handlers = [];
-        $node->name = $frags;
+        $node->name = $segment;
          
-        $parent->children[] = $node;  
+        $parent->children[] = $node;
         return $node;
     }
     
@@ -89,21 +88,12 @@ class Tree
     {
         $item = array_shift($frags);
         $child = self::_getOrAdd($parent, $item);
-       
+         
         if (empty($frags))
         {
             return $child;
         }
-        
+    
         return self::addNode($child, $frags);
-    }
-      
-    public static function getChildNode(Node $parent, $segment)
-    {
-        if (! $parent)
-        {
-            return false;
-        }   
-        return $parent->findChild($segment);
     }
 }

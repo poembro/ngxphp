@@ -42,6 +42,7 @@ class Response
      
     public function redirect($path)
     {
+        
         return  \Nig\Nig::getInstance()->run($path);
     }
 }

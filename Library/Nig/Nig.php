@@ -83,7 +83,7 @@ class Nig
             foreach ($node->handlers as $func)
             {
                 try
-                {
+              {
                     if (is_array($func))
                     {
                         $group = $func[0];
@@ -117,9 +117,12 @@ class Nig
     
     public function useNode($url, $func)
     {
-        $frags = self::_parseURL($url);
-        
-        $node = Tree::addNode(Tree::$root, $frags);
+        $frags = self::_parseURL($url); 
+        $node = Tree::addNode(Tree::$root, $frags); 
+        if (!$node || strcasecmp($url, $node->original) === 0)
+        {
+            return false; 
+        }
         $node->handlers[] = $func; 
         $node->original = $url;
     }
