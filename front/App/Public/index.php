@@ -21,6 +21,11 @@ define("APPLICATION_PATH", dirname(dirname(__DIR__)) . DS .'App' . DS);
 ini_set('display_errors',1);            
 error_reporting(E_ALL);                     
  
+if (PHP_SAPI === 'cli')
+{
+	$_SERVER['REQUEST_URI'] = $_SERVER['argv'][1];
+}
+
 include FRAMEWORK_PATH .'Nig.php'; 
 $nig = \Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Config.php');
  
@@ -55,10 +60,7 @@ $nig->useNode('/nig/app/public/index.php', function($req, $res) {
     return $m->getOne('hello');
 });
 
-if (PHP_SAPI === 'cli')
-{
-    $_SERVER['REQUEST_URI'] = $_SERVER['argv'][1];
-}
+
 
 //挂载对应控制器下的方法
 $nig->autoNode($_SERVER['REQUEST_URI']);

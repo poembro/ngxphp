@@ -107,10 +107,15 @@ class Nig
     private static function _parseURL($url)
     {
         $url = strtolower($url);
-        if ($url != '/')
+        if ($url !== '/')
         {
             $segments = explode('/', $url);
-            return array_filter($segments);
+            $segments = array_filter($segments);
+            if (count($segments) > 100)
+            {
+            	exit('url parse error '. __FILE__ .':'. __LINE__);
+            }	
+            return $segments;
         }
     
         return ['/'];
