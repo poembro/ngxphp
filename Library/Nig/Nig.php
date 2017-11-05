@@ -34,7 +34,7 @@ class Nig
     public function __construct($confPath = NULL)
     {
         Import::addLibrary(FRAMEWORK_PATH, 'Nig');
-        Import::addLibrary(APPLICATION_PATH);
+        Import::addLibrary(APPLICATION_PATH, 'App');
         
         self::$conf = Config::getInstance($confPath);
         self::$tree = Tree::getInstance();
@@ -84,7 +84,7 @@ class Nig
             foreach ($node->handlers as $func)
             {
                 try
-              {
+                {
                     if (is_array($func))
                     {
                         $group = $func[0];
