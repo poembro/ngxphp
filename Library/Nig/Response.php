@@ -42,7 +42,10 @@ class Response
      
     public function redirect($path)
     {
-        
+        if (empty($path))
+        {	
+        	return false;
+        }	
         return  \Nig\Nig::getInstance()->run($path);
     }
 }
