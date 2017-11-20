@@ -23,7 +23,7 @@ class Config
  
     private function __construct($path = NULl)
     {
-        $path = $path ? $path : APPLICATION_PATH . 'Config/Config.php';
+        $path = $path ? $path : APPLICATION_PATH . 'Config/Main.php';
         
         if (!file_exists($path))
         {

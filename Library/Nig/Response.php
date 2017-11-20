@@ -17,6 +17,7 @@
 namespace Nig;
 
 use \Nig\View;
+use \Nig\Config;
 
 class Response
 {
@@ -27,7 +28,7 @@ class Response
     private function __construct($path)
     { 
         $this->view = View::getInstance();
-        $this->view->setTemplateFolder( APPLICATION_PATH . 'View');
+        $this->view->setTemplateFolder( Config::get('ext')['View'] );
     }
  
     public static function getInstance($path = NULl)

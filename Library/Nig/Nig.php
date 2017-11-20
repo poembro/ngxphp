@@ -143,8 +143,8 @@ class Nig
         }
         
         $method = array_pop($frags);
-        $className = implode("\\", array_map("ucfirst", $frags));  
-        $group = 'App\Controllers\\' . $className;
+        $className = implode("\\", array_map("ucfirst", $frags)); 
+        $group = Config::get('ext')['index'] . $className;
         
         if (!class_exists($group, true))
         {

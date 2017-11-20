@@ -27,41 +27,15 @@ if (PHP_SAPI === 'cli')
 }
 
 include FRAMEWORK_PATH .'Nig.php'; 
-$nig = \Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Config.php');
- 
-$nig->useNode('/', function($req, $res) {
-    return $res->redirect('/main/index');
-});
-
-$nig->useNode('/a/a', function($req, $res) {
-    return 7;
-});
-
-$nig->useNode('/a/a/a', function($req, $res) {
-    return 6;
-});
-
-$nig->useNode('/a', function($req, $res) {
-    return 8;
-});
-
-//挂载一个方法
-$nig->useNode('/main/index', function($req, $res) {
-     return 123456;
-});
- 
-$nig->useNode('/api/user', function($req, $res) {
-     return 2;
-});
+$nig = \Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Main.php');
+  
 
 $nig->useNode('/nig/app/public/index.php', function($req, $res) {
 	$m = new \App\Model\User\Main();
 	$m->setOne('hello', 123);
     return $m->getOne('hello');
 });
-
-
-
+ 
 //挂载对应控制器下的方法
 $nig->autoNode($_SERVER['REQUEST_URI']);
 
