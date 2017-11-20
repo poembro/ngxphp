@@ -1,4 +1,10 @@
 <?php
+/**
+ * @Copyright (C),
+ * @Author poembro
+ * @Date: 2017-11-08 12:37:46
+ * @Description  AES加解密
+ */
 namespace App\Lib;
 
 class Mcrypt

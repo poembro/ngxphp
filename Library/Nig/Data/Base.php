@@ -1,18 +1,9 @@
-<?php  
+<?php
 /**
- * @Copyright (C), 2017 poembro
- * @Name Base.php
- * @Author poembro 269724033@qq.com
- * @Version Beta 1.0
- * @Date: 2017-09-17 下午12:30:37
- * @Description   Base  数据处理基础类
- * @Class List
- * 1. Common
- * @Function List
- * 1.
- * @History
- * <author> <time> <version > <desc>
- * poembro 2017-09-17 下午16:30:37 Beta 1.0 第一次建立该文件
+ * @Copyright (C),
+ * @Author poembro
+ * @Date: 2017-11-08 12:37:46
+ * @Description Base 数据处理基础类
  */
 namespace Nig\Data;
 
@@ -22,6 +13,11 @@ use Nig\Config;
 
 class Base
 {
+	/**
+	 * 对象缓存
+	 * @var array
+	 * @access protected
+	 */
     private static $_conn = []; 
     
     private function _getConfig($key)

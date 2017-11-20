@@ -1,19 +1,9 @@
 <?php  
 /**
- * @Copyright (C), 2017 poembro
- * @Name Nig.php
- * @Author poembro 269724033@qq.com
- * @Version Beta 1.0
- * @Date: 2017-09-17 下午12:30:37
- * @Description   Nig 核心类
- * @Class List
- * 1. Common
- * @Function List
- * 1.
- * @History
- * <author> <time> <version > <desc>
- * poembro 2017-09-17 下午16:30:37 Beta 1.0 第一次建立该文件
- * poembro 2017-09-29 下午14:49:20 Beta 1.0 url匹配精准度优化
+ * @Copyright (C), 
+ * @Author poembro 
+ * @Date: 2017-11-08 12:37:46
+ * @Description 框架核心  
  */
 namespace Nig;
   

@@ -1,26 +1,12 @@
-<?php   
+<?php
 /**
- * @Copyright (C), 2017 poembro
- * @Name Mysql.php
- * @Author poembro 269724033@qq.com
- * @Version Beta 1.0
- * @Date: 2017-09-17 下午12:30:37
- * @Description   Mysql PDO封装
- * @Class List
- * 1. Common
- * @Function List
- * 1.
- * @History
- * <author> <time> <version > <desc>
- * poembro 2017-09-17 下午16:30:37 Beta 1.0 第一次建立该文件
+ * @Copyright (C),
+ * @Author poembro
+ * @Date: 2017-11-08 12:37:46
+ * @Description Mysql PDO封装
  */
-
 namespace Nig\Data;
-  
-/**
- * 操作类(mysql)
- * Class Mysql
- */
+ 
 class Mysql
 { 
     /**
