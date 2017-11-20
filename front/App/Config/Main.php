@@ -19,6 +19,9 @@ return [
          'index' => 'App\Controllers\\', 
          'View' =>  APPLICATION_PATH . 'View'
     ],
+    'app' => [
+	    
+    ],
     'redis' => [
         'host'       => '127.0.0.1',
         'port'       => 6379,
