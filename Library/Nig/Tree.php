@@ -47,6 +47,25 @@ class Tree
         
         return self::$instance;
     } 
+     
+    public static function getNode(array $frags)
+    {
+    	$parent = self::$root;
+    	$fallbackStack = [];
+    	 
+    	foreach ($frags as $v)
+    	{
+    		$node = self::getChildNode($parent, $v);
+    		if (!$node)
+    		{
+    			continue;
+    		}
+    		$fallbackStack[] = $node;
+    		$parent = $node;
+    	}
+    
+    	return $fallbackStack;
+    }
       
     public static function getChildNode(Node $node, $segment)
     { 

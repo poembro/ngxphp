@@ -12,28 +12,42 @@ class Request
     private $_conf;
     private static $_instance;
  
-    private function __construct($path)
+    private function __construct()
     {
         $this->_conf = $_REQUEST;
     }
  
-    public static function getInstance($path = NULl)
+    public static function getInstance()
     {
         if (! self::$_instance)
         {
-            self::$_instance = new self($path);
+            self::$_instance = new self();
         }
     
         return self::$_instance;
     }
     
-    public function get($key)
+    public function get($key = NULL)
     {
-        return $this->_conf[$key];
+        return $key ? $this->_conf[$key] : $this->_conf;
     }
     
-    public function set($key, $val) 
+    public function set($key, $val = NULL) 
     {
+    	if (is_array($key) && !empty($key))
+    	{
+    		foreach ($key as $k => $v)
+    		{
+    			$this->set($k, $v);
+    		}	
+    		return ;
+    	}
+
+    	if ($val === NULL)
+    	{
+    		return ;
+    	}
+    	
         return $this->_conf[$key] = $val;
     }
 }

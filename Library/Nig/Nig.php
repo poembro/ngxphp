@@ -25,11 +25,12 @@ class Nig
     {
         Import::addLibrary(FRAMEWORK_PATH, 'Nig');
         Import::addLibrary(APPLICATION_PATH, 'App');
+        ExceptionHandle::init();
         
         self::$conf = Config::getInstance($confPath);
         self::$tree = Tree::getInstance();
         self::$req = Request::getInstance(); 
-        self::$res = Response::getInstance(); 
+        self::$res = Response::getInstance();
     }
     
     public static function getInstance($confPath = NULL)
@@ -42,60 +43,17 @@ class Nig
         return self::$_instance;
     }
 
-    private static function _getNode(array $frags)
-    {
-        $parent = Tree::$root;
-        $fallbackStack = [];
-         
-        foreach ($frags as $v)
-        {
-            $node = Tree::getChildNode($parent, $v);
-            if (!$node)
-            {
-                continue;
-            }
-            $fallbackStack[] = $node; 
-            $parent = $node;
-        }
-        
-        return $fallbackStack;
-    }
-     
-
-    private static function _handle(array $stack, $url)
-    {  
-        foreach ($stack as $k => $node)
-        {
-            if (empty($node->handlers) || strcasecmp($url, $node->original) !== 0)
-            {
-                continue;
-            }
-            
-            foreach ($node->handlers as $func)
-            {
-                try
-                {
-                    if (is_array($func))
-                    {
-                        $group = $func[0];
-                        $method = $func[1];
-                        return (new $group)->$method(self::$req, self::$res);  
-                    }
-                    
-                    return $func(self::$req, self::$res); 
-                }
-                catch (\Exception $e) 
-                {
-                    throw new \Exception($e->getMessage());
-                } 
-            }
-        }
-         
-        return 'Not Found!'; 
-    }
-    
     private static function _parseURL($url)
     {
+        $index = strpos($url, '?');
+        if ($index !== false)
+        { 
+            parse_str(substr($url, $index + 1), $getArg); 
+            Request::getInstance()->set($getArg); 
+            
+            $url = substr($url, 0, $index);
+        }
+        
         $url = strtolower($url);
         if ($url !== '/')
         {
@@ -103,23 +61,24 @@ class Nig
             $segments = array_filter($segments);
             if (count($segments) > 100)
             {
-            	exit('url parse error '. __FILE__ .':'. __LINE__);
-            }	
+            	return trigger_error('url parse error '. __FILE__ .':'. __LINE__, E_WARNING); 
+            }    
             return $segments;
         }
     
         return ['/'];
     }
     
-    public function useNode($url, $func)
+    public function useNode($url, $event)
     {
         $frags = self::_parseURL($url); 
+        
         $node = Tree::addNode(Tree::$root, $frags); 
         if (strcasecmp($url, $node->original) === 0)
         {
             return false; 
         }
-        $node->handlers[] = $func; 
+        $node->handlers[] = $event; 
         $node->original = $url;
     }
     
@@ -129,29 +88,65 @@ class Nig
         
         if (count($frags) < 2)
         {
-            return false;//必须是控制器+方法组合
+        	return trigger_error("url error !", E_WARNING); 
         }
         
         $method = array_pop($frags);
-        $className = implode("\\", array_map("ucfirst", $frags)); 
-        $group = Config::get('ext')['index'] . $className;
+        $className = array_map("ucfirst", $frags); 
+        $group = Config::get('ext')['index'] . implode("\\", $className);
         
         if (!class_exists($group, true))
         {
-        	 return false;
+        	 return trigger_error("Class Not Found !", E_WARNING); 
         }
         
-        $this->useNode($url, [$group, $method]);
+        $this->useNode($url, [new $group, $method]);
     }
 
+    private static function _handle(array $stack, $url)
+    {
+    	foreach ($stack as $k => $node)
+    	{
+    		if (empty($node->handlers) ||
+    		strcasecmp($url, $node->original) !== 0)
+    		{
+    			continue;
+    		}
+    
+    		foreach ($node->handlers as $func)
+    		{
+    			try
+    			{
+    				return call_user_func_array($func, 
+    						array(self::$req, self::$res));
+    			}
+    			catch (\Exception $e)
+    			{
+    				throw new \Exception($e->getMessage());
+    			}
+    		}
+    	}
+    	 
+    	return 'Not Found!';
+    }
+    
     public function run($current) 
     {
         $frags = self::_parseURL($current);
-        $stack = self::_getNode($frags); 
+        $stack = Tree::getNode($frags); 
+        
         return self::_handle($stack, $current);   
     }
 }
+
+
   
+/**
+ * @Copyright (C),
+ * @Author poembro
+ * @Date: 2017-11-08 12:37:46
+ * @Description 自动加载类
+ */
 class Import
 {
     private static $_libs = array();
@@ -209,3 +204,48 @@ class Import
         self::$_isInit = true;
     }
 }
+ 
+/**
+ * @Copyright (C),
+ * @Author poembro
+ * @Date: 2017-11-08 12:37:46
+ * @Description 开启后，把所有php默认样式的 warning、error等信息接替过来
+ */
+class ExceptionHandle
+{
+	private static $_isInit = false;
+
+    public static function init()
+    {
+    	if (!self::$_isInit && Config::get('ext')['debug'])
+        {
+	        set_error_handler(array(__CLASS__, 'onError' ));
+	        self::$_isInit = true;
+        }    
+    }
+    
+    /*
+     * trigger_error("Value must be 1 or below",E_USER_WARNING);
+     * E_USER_ERROR - 致命的用户生成的 run-time 错误。错误无法恢复。脚本执行被中断。
+	 * E_USER_WARNING - 非致命的用户生成的 run-time 警告。脚本执行不被中断。
+	 * E_USER_NOTICE - 默认。用户生成的 run-time 通知。在脚本发现可能有错误时发生，但也可能在脚本正常运行时发生。 
+     */
+    public static function onError($errno, $errstr, $errfile, $errline)
+    {
+        switch ($errno)
+        {
+            case E_ERROR:
+                echo "ERROR: [ID $errno] $errstr (Line: $errline of $errfile) \n";
+                exit("程序已经停止运行，请联系管理员。");  
+            case E_WARNING:
+               echo "WARNING: [ID $errno] $errstr (Line: $errline of $errfile) \n";
+               exit("framework error");
+               break;
+        
+            default:  //不显示Notice级的错误
+                break;
+        }
+    }
+     
+}
+

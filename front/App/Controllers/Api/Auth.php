@@ -15,6 +15,8 @@ class Auth
      
     public function test($res, $req) 
     {  
+    	    
+    	
           $Mcrypt = new Mcrypt();
           echo $r = $Mcrypt->encrypt('hello world');
           echo PHP_EOL;

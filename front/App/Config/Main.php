@@ -8,7 +8,8 @@
 return [
     'ext' => [
          'index' => 'App\Controllers\\', 
-         'View' =>  APPLICATION_PATH . 'View'
+         'View' =>  APPLICATION_PATH . 'View',
+         'debug' => false,
     ],
     'app' => [
 	                                                         
