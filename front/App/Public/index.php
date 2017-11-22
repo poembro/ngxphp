@@ -28,7 +28,7 @@ $nig->useNode('/nig/app/public/index.php', function($req, $res) {
   
 //挂载对应控制器下的方法
 $nig->autoNode($_SERVER['REQUEST_URI']); 
-$nig->run($_SERVER['REQUEST_URI']); 
+echo $nig->run($_SERVER['REQUEST_URI']); 
 //cli方式执行 [root@www Public]# php index.php /api/auth/test
 
 

@@ -105,7 +105,8 @@ class Nig
     
     		foreach ($node->handlers as $func)
     		{  
-    			call_user_func_array($func, array(self::$req, self::$res));
+    			return call_user_func_array($func, 
+    					array(self::$req, self::$res));
     		}
     	}
     }

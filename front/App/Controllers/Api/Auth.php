@@ -21,9 +21,7 @@ class Auth
               	
           echo  $Mcrypt->decrypt($r);
           echo PHP_EOL;
-          echo "999\r\n";
-          exit();
-          return true; 
+          return "999\r\n";  
     }
     
 
