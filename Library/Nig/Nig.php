@@ -25,7 +25,6 @@ class Nig
     {
         Import::addLibrary(FRAMEWORK_PATH, 'Nig');
         Import::addLibrary(APPLICATION_PATH, 'App');
-        ExceptionHandle::init();
         
         self::$conf = Config::getInstance($confPath);
         self::$tree = Tree::getInstance();
@@ -44,17 +43,9 @@ class Nig
     }
 
     private static function _parseURL($url)
-    {
-        $index = strpos($url, '?');
-        if ($index !== false)
-        { 
-            parse_str(substr($url, $index + 1), $getArg); 
-            Request::getInstance()->set($getArg); 
-            
-            $url = substr($url, 0, $index);
-        }
+    {  
+        $url = strtolower( parse_url($url, PHP_URL_PATH) );
         
-        $url = strtolower($url);
         if ($url !== '/')
         {
             $segments = explode('/', $url);
@@ -114,16 +105,8 @@ class Nig
     		}
     
     		foreach ($node->handlers as $func)
-    		{
-    			try
-    			{
-    				return call_user_func_array($func, 
-    						array(self::$req, self::$res));
-    			}
-    			catch (\Exception $e)
-    			{
-    				throw new \Exception($e->getMessage());
-    			}
+    		{ 
+    			return call_user_func_array($func, array(self::$req, self::$res)); 
     		}
     	}
     	 
@@ -204,48 +187,3 @@ class Import
         self::$_isInit = true;
     }
 }
- 
-/**
- * @Copyright (C),
- * @Author poembro
- * @Date: 2017-11-08 12:37:46
- * @Description 开启后，把所有php默认样式的 warning、error等信息接替过来
- */
-class ExceptionHandle
-{
-	private static $_isInit = false;
-
-    public static function init()
-    {
-    	if (!self::$_isInit && Config::get('ext')['debug'])
-        {
-	        set_error_handler(array(__CLASS__, 'onError' ));
-	        self::$_isInit = true;
-        }    
-    }
-    
-    /*
-     * trigger_error("Value must be 1 or below",E_USER_WARNING);
-     * E_USER_ERROR - 致命的用户生成的 run-time 错误。错误无法恢复。脚本执行被中断。
-	 * E_USER_WARNING - 非致命的用户生成的 run-time 警告。脚本执行不被中断。
-	 * E_USER_NOTICE - 默认。用户生成的 run-time 通知。在脚本发现可能有错误时发生，但也可能在脚本正常运行时发生。 
-     */
-    public static function onError($errno, $errstr, $errfile, $errline)
-    {
-        switch ($errno)
-        {
-            case E_ERROR:
-                echo "ERROR: [ID $errno] $errstr (Line: $errline of $errfile) \n";
-                exit("程序已经停止运行，请联系管理员。");  
-            case E_WARNING:
-               echo "WARNING: [ID $errno] $errstr (Line: $errline of $errfile) \n";
-               exit("framework error");
-               break;
-        
-            default:  //不显示Notice级的错误
-                break;
-        }
-    }
-     
-}
-

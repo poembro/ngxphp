@@ -34,19 +34,16 @@ class Request
     
     public function set($key, $val = NULL) 
     {
-    	if (is_array($key) && !empty($key))
+    	if (is_array($key))
     	{
     		foreach ($key as $k => $v)
     		{
     			$this->set($k, $v);
-    		}	
+    		}
     		return ;
     	}
 
-    	if ($val === NULL)
-    	{
-    		return ;
-    	}
+    	if ($val === NULL) return ; 
     	
         return $this->_conf[$key] = $val;
     }
