@@ -44,8 +44,7 @@ class Nig
 
     private static function _parseURL($url)
     {  
-        $url = strtolower( parse_url($url, PHP_URL_PATH) );
-        
+        $url = strtolower( parse_url($url, PHP_URL_PATH) ); 
         if ($url !== '/')
         {
             $segments = explode('/', $url);
@@ -105,16 +104,14 @@ class Nig
     		}
     
     		foreach ($node->handlers as $func)
-    		{ 
-    			return call_user_func_array($func, array(self::$req, self::$res)); 
+    		{  
+    			call_user_func_array($func, array(self::$req, self::$res));
     		}
     	}
-    	 
-    	return 'Not Found!';
     }
     
     public function run($current) 
-    {
+    { 
         $frags = self::_parseURL($current);
         $stack = Tree::getNode($frags); 
         

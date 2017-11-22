@@ -14,17 +14,16 @@ class Auth
     public $nig;
      
     public function test($res, $req) 
-    {  
-    	    
-    	
+    {   
           $Mcrypt = new Mcrypt();
           echo $r = $Mcrypt->encrypt('hello world');
           echo PHP_EOL;
               	
           echo  $Mcrypt->decrypt($r);
           echo PHP_EOL;
-          echo '999999999';
-          return ; 
+          echo "999\r\n";
+          exit();
+          return true; 
     }
     
 
