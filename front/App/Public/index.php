@@ -6,12 +6,12 @@
  * @Description  index 入口文件初始化类
  */
 define("DS", DIRECTORY_SEPARATOR);
-define("FRAMEWORK_PATH", dirname(dirname(dirname(__DIR__))) . DS .'Library/Nig' . DS);
+define("FRAMEWORK_PATH", dirname(dirname(dirname(__DIR__))) . DS .'Library' . DS . 'Nig' . DS);
 define("APPLICATION_PATH", dirname(dirname(__DIR__)) . DS .'App' . DS);
  
 ini_set('display_errors',1);            
-error_reporting(E_ALL);                     
- 
+error_reporting(E_ALL);
+
 if (PHP_SAPI === 'cli')
 {
 	$_SERVER['REQUEST_URI'] = $_SERVER['argv'][1];
@@ -19,7 +19,6 @@ if (PHP_SAPI === 'cli')
 
 include FRAMEWORK_PATH .'Nig.php'; 
 $nig = \Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Main.php');
-  
 
 $nig->useNode('/nig/app/public/index.php', function($req, $res) {
 	$m = new \App\Model\User\Main();
@@ -31,7 +30,7 @@ $nig->useNode('/nig/app/public/index.php', function($req, $res) {
 $nig->autoNode($_SERVER['REQUEST_URI']);
 
 echo $nig->run($_SERVER['REQUEST_URI']);
-
+echo PHP_EOL;
 //cli方式执行 [root@www Public]# php index.php /api/auth/test
 
 

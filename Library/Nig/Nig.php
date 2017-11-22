@@ -95,11 +95,11 @@ class Nig
         $className = array_map("ucfirst", $frags); 
         $group = Config::get('ext')['index'] . implode("\\", $className);
         
-        if (!class_exists($group, true))
+        if (!class_exists($group, true) && !method_exists($group, $method))
         {
-        	 return trigger_error("Class Not Found !", E_WARNING); 
+        	 return trigger_error("controllers or methods not found !", E_WARNING); 
         }
-        
+ 
         $this->useNode($url, [new $group, $method]);
     }
 

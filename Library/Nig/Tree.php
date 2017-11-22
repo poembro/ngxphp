@@ -71,10 +71,7 @@ class Tree
     { 
         foreach ($node->children as $it)
         {
-            if ($segment === $it->name)
-            {
-                return $it;
-            }
+            if ($segment === $it->name) return $it;      
         }
         
         return false; 
