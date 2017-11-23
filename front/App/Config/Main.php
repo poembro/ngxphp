@@ -31,6 +31,6 @@ return [
         'password' => '123456',
         'dbname'   => 'test2',
         'charset'  => 'utf8',
-        'pconnect' => false
+        'pconnect' => true
     ] 
 ];

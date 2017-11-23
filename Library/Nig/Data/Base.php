@@ -22,6 +22,11 @@ class Base
     
     private function _getConfig($key)
     { 
+    	if (!$key)
+    	{
+    		return trigger_error("Data config error !".
+    				__FILE__ . ':'. __LINE__, E_USER_ERROR);
+    	}  
     	return Config::get($key); 
     }
     
@@ -31,7 +36,9 @@ class Base
         {
             return self::$_conn[$key];
         }
-        self::$_conn[$key] = new Mysql($this->_getConfig($key));
+        
+        $conf = $this->_getConfig($key);
+        self::$_conn[$key] = new Mysql($conf);
         return self::$_conn[$key];
     }
     

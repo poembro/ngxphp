@@ -63,7 +63,7 @@ class Mysql
         $dns = 'mysql:host=' . $config['hostname'] . ';port=' . $config['port'];
         $dns .= ';dbname=' . $config['dbname']; 
         try
-       {
+        {
             $this->_conn = new \PDO($dns, $config['username'], $config['password'], $options);
         }
         catch (\Exception $e)
