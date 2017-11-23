@@ -8,8 +8,8 @@
 define("DS", DIRECTORY_SEPARATOR);
 define("FRAMEWORK_PATH", dirname(dirname(dirname(__DIR__))) . DS .'Library' . DS . 'Nig' . DS);
 define("APPLICATION_PATH", dirname(dirname(__DIR__)) . DS .'App' . DS);
- 
-ini_set('display_errors',1);            
+
+ini_set('display_errors', 1);            
 error_reporting(E_ALL);
 
 if (PHP_SAPI === 'cli')
