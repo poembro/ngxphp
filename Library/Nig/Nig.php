@@ -51,8 +51,7 @@ class Nig
             $segments = array_filter($segments);
             if (count($segments) > 100)
             {
-            	return trigger_error('url parse error '.
-            			 __FILE__ .':'. __LINE__, E_USER_ERROR); 
+            	return trigger_error('nig: url parse error ', E_USER_ERROR); 
             }    
             return $segments;
         }
@@ -79,8 +78,7 @@ class Nig
         
         if (count($frags) < 2)
         {
-        	return trigger_error("url error !".
-        			 __FILE__ . ':'. __LINE__, E_USER_ERROR); 
+        	return trigger_error("nig:  url error !", E_USER_ERROR); 
         }
         
         $method = array_pop($frags);
@@ -89,8 +87,7 @@ class Nig
         
         if (!class_exists($group, true) || !method_exists($group, $method))
         {
-        	 return trigger_error("controllers or methods not found !". 
-        	 		__FILE__ . ':' .  __LINE__, E_USER_ERROR); 
+        	 return trigger_error("nig:  controllers or methods not found !", E_USER_ERROR); 
         }
  
         $this->useNode($url, [new $group, $method]);

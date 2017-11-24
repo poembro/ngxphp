@@ -45,10 +45,10 @@
                  {
                      echo 'javascript:;';
                  }
-            echo '">下一页 ></a>';
+            echo '">下一页 ></a>'; 
             
             echo '<a href="'.$page['end'].'">末页</a>';
-          ?>
+            ?>
       </div>
           
 <?php  } ?> 
