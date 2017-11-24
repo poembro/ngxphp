@@ -19,7 +19,7 @@
  *          print_r($upload->getFileInfo());
  *          }
  */ 
-namespace Lib;
+namespace App\Lib;
 
 class FileUpload
 {

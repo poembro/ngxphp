@@ -1,4 +1,4 @@
-<?php 
+<?php  
 /**
  * @Copyright (C),
  * @Author poembro
@@ -7,19 +7,45 @@
  */
 namespace App\Controllers;
 
-class User 
-{
-    public $nig;
-     
-    public function test($res, $req) 
-    {  
-        echo '999999999';
-        return ; 
-    } 
+use App\Lib\Page;
+use App\Lib\Image\ImageWrapper;
 
-    public function hello($res, $req)
+class User
+{
+    /**
+     * @desc   列表页
+     * @access public
+     * @param void
+     * @return void
+     */
+    public function index($req, $res)
     {
-        echo '88888888';
-        return ;
-    } 
+        $roomid = 1000; 
+        $option = array();
+        $option['roomid'] = $roomid;
+        
+        $m = new \App\Model\User();
+        $counts = $m->getCount($option);
+        $result = array();
+        $showPage = array(); 
+        
+        if ($counts > 0)
+        {
+            $page = Page::get($counts, 5,  '',  $_GET['page'] ? $_GET['page']:1);   
+            $result =  $m->getUserList($option, $page['limit']); 
+            $showPage = $page['page'];
+        }
+ 
+        $res->view->assign('list',  $result);
+        $res->view->assign('page', $showPage); 
+        $res->view->assign('option', $option);
+        $res->view->display('/Main/index.php');
+    }
+    
+    public function codeAction()
+    {
+    	ob_end_clean();
+    	ImageWrapper::imgVerify(4, 3, 'gif', 90, 38);
+    }
+    
 }

@@ -15,7 +15,7 @@
  *      <author>    <time>                        <version >   <desc>
  *        King      Nov 4, 20137:36:37 PM  0        第一次建立该文件
  */
-namespace Lib\Image;
+namespace App\Lib\Image;
 
 /**
 * @desc 

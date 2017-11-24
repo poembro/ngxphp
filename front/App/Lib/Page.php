@@ -1,5 +1,5 @@
 <?php
-namespace Lib;
+namespace App\Lib;
 /**
  * 分页类
  * @author Aiden

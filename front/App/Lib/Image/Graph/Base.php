@@ -16,7 +16,7 @@
 *        King      Tue Jan 03 09:38:38 CST 2012  Beta 1.0           第一次建立该文件
 *
 */
-namespace Lib\Image\Graph;
+namespace App\Lib\Image\Graph;
 
 /**
 *@desc  图片生成基类

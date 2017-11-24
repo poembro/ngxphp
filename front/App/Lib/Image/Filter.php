@@ -16,7 +16,7 @@
 *        King   2014-6-7下午2:35:52      Beta 1.0                    第一次建立该文件
 *
 */
-namespace Lib\Image;
+namespace App\Lib\Image;
 
 /**
  * @desc 图片识别并过滤类 

@@ -16,7 +16,7 @@
 *        King      Tue Jan 03 16:38:55 CST 2012  Beta 1.0           第一次建立该文件
 *
 */
-namespace Lib\Image;
+namespace App\Lib\Image;
 
 /**
 * @desc 简单封装的一些图片方法类
