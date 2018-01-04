@@ -18,18 +18,10 @@ if (PHP_SAPI === 'cli')
 }
 
 include FRAMEWORK_PATH .'Nig.php'; 
-$nig = Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Main.php');
- 
-$nig->useNode('/nig/app/public/index.php', function($req, $res) {
-	$m = new \App\Model\User\Main();
-	$m->setOne('hello', 123);
-    return $m->getOne('hello');
-});
-  
-//挂载对应控制器下的方法
-$nig->autoNode($_SERVER['REQUEST_URI']); 
-echo $nig->run($_SERVER['REQUEST_URI']); 
-//cli方式执行 [root@www Public]# php index.php /api/auth/test
+
+echo Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Main.php')
+        ->autoNode($_SERVER['REQUEST_URI'])
+        ->run($_SERVER['REQUEST_URI']);
 
 
 

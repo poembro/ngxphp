@@ -43,16 +43,17 @@ class Nig
     }
 
     private static function _parseURL($url)
-    {   
+    {
         if ($url !== '/')
         {
-        	$url = strtolower( parse_url($url, PHP_URL_PATH) );
-            $segments = explode('/', $url);
+        	$url = parse_url($url, PHP_URL_PATH);
+            $segments = explode('/', strtolower($url));
             $segments = array_filter($segments);
+            
             if (count($segments) > 100)
             {
             	return trigger_error('nig: url parse error ', E_USER_ERROR); 
-            }    
+            }
             return $segments;
         }
     
@@ -61,21 +62,32 @@ class Nig
     
     public function useNode($url, $event)
     {
-        $frags = self::_parseURL($url); 
-        
+    	if (is_array($url))
+    	{ 
+    		$frags = $url[1];
+    		$url = $url[0];
+    	}
+    	else 
+    	{
+            $frags = self::_parseURL($url); 
+    	}
+    	
         $node = Tree::addNode(Tree::$root, $frags); 
         if (strcasecmp($url, $node->original) === 0)
         {
             return false; 
         }
+        
         $node->handlers[] = $event; 
         $node->original = $url;
+        
+        return $this;
     }
     
     public function autoNode($url) 
     {
-        $frags = self::_parseURL($url);  
-        
+        $frags = $flagArg = self::_parseURL($url);  
+         
         if (count($frags) < 2)
         {
         	return trigger_error("nig:  url error !", E_USER_ERROR); 
@@ -83,30 +95,35 @@ class Nig
         
         $method = array_pop($frags);
         $className = array_map("ucfirst", $frags); 
-        $group = Config::get('ext')['index'] . implode("\\", $className);
+        $className = Config::get('ext')['index'] . implode("\\", $className);
         
-        if (!class_exists($group, true) || !method_exists($group, $method))
+        if (!class_exists($className, true)  
+            || !method_exists($className, $method))
         {
-        	 return trigger_error("nig:  controllers or methods not found !", E_USER_ERROR); 
+        	 return trigger_error("nig: controllers or methods not found !",
+        	 		 E_USER_ERROR); 
         }
- 
-        $this->useNode($url, [new $group, $method]);
+         
+        $object = new $className(self::$req, self::$res);
+        $this->useNode([$url, $flagArg], [$object, $method]);
+        
+        return $this;
     }
 
     private static function _handle(array $stack, $url)
     {
     	foreach ($stack as $k => $node)
     	{
-    		if (empty($node->handlers) ||
-    		strcasecmp($url, $node->original) !== 0)
+    		if (empty($node->handlers) || strcasecmp($url, 
+    				$node->original) !== 0)
     		{
     			continue;
     		}
     
     		foreach ($node->handlers as $func)
-    		{  
+    		{
     			return call_user_func_array($func, 
-    					array(self::$req, self::$res));
+    					[self::$req, self::$res]);
     		}
     	}
     }
@@ -115,7 +132,6 @@ class Nig
     { 
         $frags = self::_parseURL($current);
         $stack = Tree::getNode($frags); 
-        
         return self::_handle($stack, $current);   
     }
 }
