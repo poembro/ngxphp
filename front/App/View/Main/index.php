@@ -3,7 +3,14 @@
    <title>helloworld</title>
 </head>
 <body>
-    <h1><?php echo $res; ?></h1>
+    <?php 
+         foreach($list as $k => $v)
+         {
+    ?>
+
+    <h1><?php echo $v['name']; ?></h1>
+       
+    <?php } ?>
     
     <nav class="pagination">
    	    <?php  include  dirname(__DIR__).'/mg/page.php';?>   	 

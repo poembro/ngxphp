@@ -56,8 +56,11 @@ class Nig
             }
             return $segments;
         }
-    
-        return ['/'];
+        
+        $config= Config::get('ext');
+        $defaultControllers = $config['defaultControllers'];
+        $defaultAction = $config['defaultAction'];
+        return [$defaultControllers, $defaultAction];
     }
     
     public function useNode($url, $event)
@@ -90,7 +93,7 @@ class Nig
          
         if (count($frags) < 2)
         {
-            return trigger_error("nig:  url error !", E_USER_ERROR); 
+            return $this;
         }
         
         $method = array_pop($frags);

@@ -18,7 +18,7 @@ if (PHP_SAPI === 'cli')
 }
 
 include FRAMEWORK_PATH .'Nig.php'; 
-
+ 
 echo Nig\Nig::getInstance(APPLICATION_PATH . 'Config/Main.php')
         ->autoNode($_SERVER['REQUEST_URI'])
         ->run($_SERVER['REQUEST_URI']);

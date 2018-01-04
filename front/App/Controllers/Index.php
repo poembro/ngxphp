@@ -10,7 +10,7 @@ namespace App\Controllers;
 use App\Lib\Page;
 use App\Lib\Image\ImageWrapper;
 
-class User
+class Index
 {
     /**
      * @desc   列表页
@@ -42,11 +42,4 @@ class User
         $res->view->assign('option', $option);
         $res->view->display('/Main/index.php');
     }
-    
-    public function codeAction()
-    {
-    	ob_end_clean();
-    	ImageWrapper::imgVerify(4, 3, 'gif', 90, 38);
-    }
-    
 }

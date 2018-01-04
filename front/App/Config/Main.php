@@ -8,6 +8,8 @@
 return [
     'ext' => [
         'index' => 'App\Controllers\\', 
+        'defaultControllers' => 'index',
+        'defaultAction' => 'index', 
         'View' =>  APPLICATION_PATH . 'View',
         'debug' => false,
     ],
