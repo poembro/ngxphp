@@ -13,7 +13,7 @@ use \Nig\Response;
 use \Nig\Config;
 
 class Nig
-{ 
+{
     public static $req = NULL;
     public static $res = NULL;
     public static $tree = NULL;
@@ -43,10 +43,10 @@ class Nig
     }
 
     private static function _parseURL($url)
-    {  
-        if ($url && $url != '/')
-        {
-            $original = $url = strtolower($url);
+    {
+        if ($url !== '/')
+        { 
+            $url = strtolower($url);
             $url = str_replace("/",' ', $url);
             $segments = explode(' ', trim($url));
             
@@ -54,12 +54,13 @@ class Nig
             {
                 return trigger_error('nig: url parse error ', E_USER_ERROR); 
             }
-            return ['url' => $original, 'segments' => $segments];
+            return $segments;
         }
         
-        $config= Config::get('ext'); 
-        $url = $config['defaultUrl'];
-        return self::_parseURL($url);
+        $config= Config::get('ext');
+        $c = $config['defaultControllers'];
+        $a = $config['defaultAction'];
+        return [$c, $a];
     }
     
     private static function addEvent($url, $frags, $event)
@@ -76,24 +77,25 @@ class Nig
     
     public function useNode($url, $event)
     {
-        $frags = self::_parseURL($url);  
-        self::addEvent($frags['url'], $frags['segments'], $event); 
+        $frags = self::_parseURL($url);
+        
+        self::addEvent($url, $frags, $event);
         return $this;
     }
     
+    
     public function autoNode($url) 
     {
-        $frags = self::_parseURL($url);  
-        $segments = $frags['segments'];
-        
-        if (count($segments) < 2)
+        $frags = $flagArg = self::_parseURL($url);  
+         
+        if (count($frags) < 2)
         {
             return $this;
         }
         
-        $method = array_pop($segments);
+        $method = array_pop($frags);
         
-        $tmp = implode("\\", array_map("ucfirst", $segments));
+        $tmp = implode("\\", array_map("ucfirst", $frags));
         $className = Config::get('ext')['namespace'] . $tmp;
         
         if (!class_exists($className, true)  
@@ -102,13 +104,13 @@ class Nig
              return trigger_error("nig: controllers or methods not found !<br /> \r\n",
                  E_USER_ERROR); 
         }
-        
-        self::addEvent($frags['url'], $frags['segments'], [$className, $method]);
+         
+        self::addEvent($url, $flagArg, [$className, $method]);
         return $this;
     }
 
     private static function _handle(array $stack, $url)
-    {     
+    {
         foreach ($stack as $k => $node)
         {
             if (empty($node->handlers) || strcasecmp($url, 
@@ -137,10 +139,10 @@ class Nig
     }
     
     public function run($current) 
-    {  
+    {
         $frags = self::_parseURL($current);
-        $stack = Tree::getNode($frags['segments']); 
-        return self::_handle($stack, $frags['url']);   
+        $stack = Tree::getNode($frags); 
+        return self::_handle($stack, $current);   
     }
 }
 
