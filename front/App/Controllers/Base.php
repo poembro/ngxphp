@@ -11,9 +11,9 @@ use App\Lib\Weixin;
 
 class Base 
 {
-	const APPID = 'wxd6053c3091d8aaaf';
-	const APPSECRET = 'ae26b63095a8bbc5d1b9b9965e0583d6';
-	const CODE = 'J5s6W8ed51QW';
+	const APPID = 'wxd6053c3091d8aaaf9';
+	const APPSECRET = 'ae26b63095a8bbc5d1b9b9965e0583d69';
+	const CODE = 'J5s6W8ed51QW9';
 	
     public function __construct()
     {
