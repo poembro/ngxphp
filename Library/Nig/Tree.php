@@ -50,21 +50,21 @@ class Tree
      
     public static function getNode(array $frags)
     {
-    	$parent = self::$root;
-    	$fallbackStack = [];
-    	 
-    	foreach ($frags as $v)
-    	{
-    		$node = self::getChildNode($parent, $v);
-    		if (!$node)
-    		{
-    			continue;
-    		}
-    		$fallbackStack[] = $node;
-    		$parent = $node;
-    	}
+        $parent = self::$root;
+        $fallbackStack = [];
+         
+        foreach ($frags as $v)
+        {
+            $node = self::getChildNode($parent, $v);
+            if (!$node)
+            {
+                continue;
+            }
+            $fallbackStack[] = $node;
+            $parent = $node;
+        }
     
-    	return $fallbackStack;
+        return $fallbackStack;
     }
       
     public static function getChildNode(Node $node, $segment)

@@ -37,11 +37,11 @@ class Config
     
     public static function get($key)
     {
-    	if (!$key) 
-    	{
-    		return self::$_conf;
-    	}
-    	
+        if (!$key) 
+        {
+            return self::$_conf;
+        }
+        
         return self::$_conf[$key];
     }
     

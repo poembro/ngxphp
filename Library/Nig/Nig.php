@@ -46,13 +46,13 @@ class Nig
     {
         if ($url !== '/')
         {
-        	$url = parse_url($url, PHP_URL_PATH);
+            $url      = parse_url($url, PHP_URL_PATH);
             $segments = explode('/', strtolower($url));
             $segments = array_filter($segments);
             
             if (count($segments) > 100)
             {
-            	return trigger_error('nig: url parse error ', E_USER_ERROR); 
+                return trigger_error('nig: url parse error ', E_USER_ERROR); 
             }
             return $segments;
         }
@@ -62,16 +62,16 @@ class Nig
     
     public function useNode($url, $event)
     {
-    	if (is_array($url))
-    	{ 
-    		$frags = $url[1];
-    		$url = $url[0];
-    	}
-    	else 
-    	{
+        if (is_array($url))
+        { 
+            $frags = $url[1];
+            $url = $url[0];
+        }
+        else 
+        {
             $frags = self::_parseURL($url); 
-    	}
-    	
+        }
+        
         $node = Tree::addNode(Tree::$root, $frags); 
         if (strcasecmp($url, $node->original) === 0)
         {
@@ -90,20 +90,21 @@ class Nig
          
         if (count($frags) < 2)
         {
-        	return trigger_error("nig:  url error !", E_USER_ERROR); 
+            return trigger_error("nig:  url error !", E_USER_ERROR); 
         }
         
         $method = array_pop($frags);
-        $className = array_map("ucfirst", $frags); 
-        $className = Config::get('ext')['index'] . implode("\\", $className);
+        $classNameArr = array_map("ucfirst", $frags); 
+        $tmp = implode("\\", $classNameArr);
+        $className = Config::get('ext')['index'] . $tmp;
         
         if (!class_exists($className, true)  
             || !method_exists($className, $method))
         {
-        	 return trigger_error("nig: controllers or methods not found !",
-        	 		 E_USER_ERROR); 
+             return trigger_error("nig: controllers or methods not found !",
+                 E_USER_ERROR); 
         }
-         
+        
         $object = new $className(self::$req, self::$res);
         $this->useNode([$url, $flagArg], [$object, $method]);
         
@@ -112,20 +113,20 @@ class Nig
 
     private static function _handle(array $stack, $url)
     {
-    	foreach ($stack as $k => $node)
-    	{
-    		if (empty($node->handlers) || strcasecmp($url, 
-    				$node->original) !== 0)
-    		{
-    			continue;
-    		}
+        foreach ($stack as $k => $node)
+        {
+            if (empty($node->handlers) || strcasecmp($url, 
+                $node->original) !== 0)
+            {
+                continue;
+            }
     
-    		foreach ($node->handlers as $func)
-    		{
-    			return call_user_func_array($func, 
-    					[self::$req, self::$res]);
-    		}
-    	}
+            foreach ($node->handlers as $func)
+            {
+                return call_user_func_array($func, 
+                    [self::$req, self::$res]);
+            }
+        }
     }
     
     public function run($current) 

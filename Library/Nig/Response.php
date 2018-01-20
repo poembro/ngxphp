@@ -13,11 +13,10 @@ use \Nig\Config;
 class Response
 {
     public $view;
-    
     private static $_instance;
  
     private function __construct($path)
-    { 
+    {
         $this->view = View::getInstance();
         $this->view->setTemplateFolder( Config::get('ext')['View'] );
     }

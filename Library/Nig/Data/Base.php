@@ -13,21 +13,21 @@ use Nig\Config;
 
 class Base
 {
-	/**
-	 * 对象缓存
-	 * @var array
-	 * @access protected
-	 */
+    /**
+     * 对象缓存
+     * @var array
+     * @access protected
+     */
     private static $_conn = []; 
     
     private function _getConfig($key)
     { 
-    	if (!$key)
-    	{
-    		return trigger_error("Data config error !".
-    				__FILE__ . ':'. __LINE__, E_USER_ERROR);
-    	}  
-    	return Config::get($key); 
+        if (!$key)
+        {
+            return trigger_error("Data config error !".
+                __FILE__ . ':'. __LINE__, E_USER_ERROR);
+        }  
+        return Config::get($key); 
     }
     
     public function mysqlConn($key = 'mysql') 
