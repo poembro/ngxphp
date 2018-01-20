@@ -7,12 +7,12 @@
  */
 return [
     'ext' => [
-         'index' => 'App\Controllers\\', 
-         'View' =>  APPLICATION_PATH . 'View',
-         'debug' => false,
+        'index' => 'App\Controllers\\', 
+        'View' =>  APPLICATION_PATH . 'View',
+        'debug' => false,
     ],
     'app' => [
-	                                                         
+                        
     ],
     'redis' => [
         'host'       => '127.0.0.1',
