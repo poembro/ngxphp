@@ -22,9 +22,6 @@ class Ngx
     {
         Import::addLibrary(FRAMEWORK_PATH, 'Ngx');
         Import::addLibrary(APPLICATION_PATH, 'App');
-        
-        self::$req = Request::getInstance(); 
-        self::$res = Response::getInstance();  
     }
     
     public static function getInstance()
@@ -39,7 +36,9 @@ class Ngx
 
     public function init($path) 
     {
-        Config::init($path);
+        Config::getInstance($path);
+        self::$req = Request::getInstance(); 
+        self::$res = Response::getInstance();  
         //more TODO
         return $this;
     }

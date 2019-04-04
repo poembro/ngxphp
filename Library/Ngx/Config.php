@@ -13,17 +13,7 @@ class Config
 
     private static $_instance;
  
-    public static function getInstance()
-    {
-        if (! self::$_instance)
-        {
-            self::$_instance = new self();
-        }
-    
-        return self::$_instance;
-    }
-    
-    public static function init($filepath)
+    private function __construct($filepath)
     {
         if (!is_file($filepath))
         {
@@ -32,6 +22,17 @@ class Config
 
         self::$_conf = include_once $filepath;
     }
+
+    public static function getInstance($filepath)
+    {
+        if (! self::$_instance)
+        {
+            self::$_instance = new self($filepath);
+        }
+    
+        return self::$_instance;
+    }
+    
 
     public static function get($name)
     {
@@ -51,7 +52,7 @@ class Config
                 break;
             }
         }
-
+        
         return $value;
     }
     
