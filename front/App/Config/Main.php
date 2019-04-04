@@ -7,11 +7,10 @@
  */
 return [
     'ext' => [
-        'index' => 'App\Controllers\\', 
-        'defaultControllers' => 'index',
-        'defaultAction' => 'index', 
-        'View' =>  APPLICATION_PATH . 'View',
+        'defaultAction' => '/login/test',
+        'view' =>  APPLICATION_PATH . 'View',
         'debug' => false,
+        'env' => 'dev' // production
     ],
     'app' => [
                         

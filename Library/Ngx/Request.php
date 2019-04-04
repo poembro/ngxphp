@@ -5,16 +5,16 @@
  * @Date: 2017-11-08 12:37:46
  * @Description Request 请求参数类
  */
-namespace Nig;
+namespace Ngx;
 
 class Request
 {
-    private $_conf;
+    private $_conf = [];
     private static $_instance;
  
     private function __construct()
     {
-        $this->_conf = $_REQUEST;
+        $this->_conf = $_SERVER;
     }
  
     public static function getInstance()
@@ -29,23 +29,25 @@ class Request
     
     public function get($key = NULL)
     {
-        return $key ? $this->_conf[$key] : $this->_conf;
+        if (isset($this->_conf[$key]))
+        {
+            return $this->_conf[$key];
+        }
+        return NULL;
     }
     
     public function set($key, $val = NULL) 
     {
         if (is_array($key))
         {
-            foreach ($key as $k => $v)
-            {
-                $this->set($k, $v);
-            }
-            return ;
+            $this->_conf = array_merge($this->_conf, $key);
         }
-
-        if ($val === NULL) return ; 
-        
-        return $this->_conf[$key] = $val;
+        else
+        {
+            $this->_conf[$key] = $val;
+        }
+    
+        return true;
     }
 }
  

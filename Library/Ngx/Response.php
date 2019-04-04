@@ -5,10 +5,10 @@
  * @Date: 2017-11-08 12:37:46
  * @Description Response 响应处理类
  */
-namespace Nig;
+namespace Ngx;
 
-use \Nig\View;
-use \Nig\Config;
+use \Ngx\View;
+use \Ngx\Config;
 
 class Response
 {
@@ -18,7 +18,7 @@ class Response
     private function __construct($path)
     {
         $this->view = View::getInstance();
-        $this->view->setTemplateFolder( Config::get('ext')['View'] );
+        $this->view->setTemplateFolder( Config::get('ext.view') );
     }
  
     public static function getInstance($path = NULl)

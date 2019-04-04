@@ -5,7 +5,7 @@
  * @Date: 2017-11-08 12:37:46
  * @Description View 视图处理类
  */
-namespace Nig;
+namespace Ngx;
  
 class View 
 {

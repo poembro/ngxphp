@@ -5,11 +5,12 @@
  * @Date: 2017-11-08 12:37:46
  * @Description Rdb redis封装类
  */
-namespace Nig\Data;
+namespace Ngx\Data;
 
-class Rdb
+use Ngx\Log;
+
+class Rdb extends Schema
 {
-
     /**
      * @desc   连接实例
      * @var Redis
@@ -32,7 +33,6 @@ class Rdb
         'servers'    => null
     ];
 
-    
     /**
      * @desc View当前实例
      * @var View
@@ -40,6 +40,17 @@ class Rdb
      */
     private static $_instance;
     
+    /**
+     * @desc 添加语句执行信息
+     * @access public
+     * @param string $sql sql语句
+     * @return void
+     */
+    public function addQuery($msg)
+    {
+        Log::addQuery($msg,  __CLASS__);
+    }
+
     /**
      * @desc 获取当前视图实例
      * @access public
@@ -85,7 +96,7 @@ class Rdb
             $conn->pconnect($policy['host'], $policy['port'], $policy['lifetime']);
         } 
         else 
-       {  
+        {  
             $conn->connect($policy['host'], $policy['port'], $policy['lifetime']);
         }
 
@@ -96,7 +107,7 @@ class Rdb
         {
             $conn->setOption($k, $v);
         }
-
+        $this->addQuery('连接...' . print_r($policy, true));
         return $conn;
     }
 
@@ -111,6 +122,7 @@ class Rdb
      */
     public function __call($method, $params)
     {
+        $this->addQuery('执行...' . $method . print_r($params, true));
         return call_user_func_array([$this->connect(), $method], $params);
     }
 

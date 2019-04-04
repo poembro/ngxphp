@@ -5,11 +5,11 @@
  * @Date: 2017-11-08 12:37:46
  * @Description Base 数据处理基础类
  */
-namespace Nig\Data;
+namespace Ngx\Data;
 
-use Nig\Data\Mysql;
-use Nig\Data\Rdb;
-use Nig\Config;
+use Ngx\Data\Pdo;
+use Ngx\Data\Rdb;
+use Ngx\Config;
 
 class Base
 {
@@ -19,13 +19,12 @@ class Base
      * @access protected
      */
     private static $_conn = []; 
-    
-    final private function _get($key)
+
+    final private function getconfig($key)
     {
         if (!$key)
         {
-            return trigger_error("Data config error !".
-                __FILE__ . ':'. __LINE__, E_USER_ERROR);
+            throw new \Exception("Data config error ! \r\n");
         }
         return Config::get($key); 
     }
@@ -37,8 +36,8 @@ class Base
             return self::$_conn[$key];
         }
         
-        $conf = $this->_get($key);
-        self::$_conn[$key] = new Mysql($conf);
+        $conf = $this->getconfig($key);
+        self::$_conn[$key] = new Pdo($conf);
         
         return self::$_conn[$key];
     }
@@ -50,7 +49,7 @@ class Base
             return self::$_conn[$key];
         }
         
-        $conf = $this->_get($key);
+        $conf = $this->getconfig($key);
         
         self::$_conn[$key] = Rdb::getInstance($conf);
         return self::$_conn[$key];
