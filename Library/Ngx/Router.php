@@ -4,6 +4,7 @@
  * @Author poembro
  * @Date: 2017-11-08 12:37:46
  * @Description Router  请求参数类
+ * @Reference CodeIgniter
  */
 namespace Ngx;
 

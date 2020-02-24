@@ -3,7 +3,7 @@
  * @Copyright (C),
  * @Author poembro
  * @Date: 2017-11-08 12:37:46
- * @Description Request 请求参数类
+ * @Description Request 日志类
  */
 namespace Ngx;
 

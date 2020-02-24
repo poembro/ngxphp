@@ -1,19 +1,10 @@
 <?php
 /**
- * @Copyright (C), 2011-, King.
- * @Name: Main.php
- * @Author: King
- * @Version: Beta 1.0
- * @Date: 2015-4-23下午10:11:39
- * @Description:
- * @Class List:
- * 1.
- * @Function List:
- * 1.
- * @History:
- * <author> <time> <version > <desc>
- * King 2015-4-23下午10:11:39 Beta 1.0 第一次建立该文件
- */ 
+ * @Copyright (C),
+ * @Author poembro
+ * @Date: 2017-11-08 12:37:46
+ * @Description  Auth 传统的php框架思维中的控制器
+ */
 
 namespace App\Controllers;
 
