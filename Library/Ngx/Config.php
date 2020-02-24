@@ -9,11 +9,20 @@ namespace Ngx;
 
 class Config
 {
-    public static $_conf;
+    /**
+     * @desc   缓存对象数组
+     * @access public 
+     * @return array
+     */
+    public static $_conf; 
 
-    private static $_instance;
- 
-    private function __construct($filepath)
+    /**
+     * @desc   初始化配置
+     * @access public 
+     * @param  string $filepath 
+     * @return void
+     */ 
+    public static function init($filepath)
     {
         if (!is_file($filepath))
         {
@@ -23,17 +32,12 @@ class Config
         self::$_conf = include_once $filepath;
     }
 
-    public static function getInstance($filepath)
-    {
-        if (! self::$_instance)
-        {
-            self::$_instance = new self($filepath);
-        }
-    
-        return self::$_instance;
-    }
-    
-
+    /**
+     * @desc   获取配置
+     * @access public 
+     * @param  string $name 
+     * @return void
+     */ 
     public static function get($name)
     {
         $value = self::$_conf;
@@ -56,6 +60,13 @@ class Config
         return $value;
     }
     
+    /**
+     * @desc   写入配置
+     * @access public 
+     * @param  string $key 
+     * @param  void $val
+     * @return void
+     */ 
     public static function set($key, $val) 
     {
         return self::$_conf[$key] = $val;

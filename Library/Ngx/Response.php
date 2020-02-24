@@ -7,25 +7,23 @@
  */
 namespace Ngx;
 
-use \Ngx\View;
-use \Ngx\Config;
-
 class Response
 {
     public $view;
     private static $_instance;
  
-    private function __construct($path)
+    private function __construct()
     {
+        $path = Config::get('ext.view');
         $this->view = View::getInstance();
-        $this->view->setTemplateFolder( Config::get('ext.view') );
+        $this->view->setTemplateFolder($path);
     }
  
-    public static function getInstance($path = NULl)
+    public static function getInstance()
     {
         if (! self::$_instance)
         {
-            self::$_instance = new self($path);
+            self::$_instance = new self();
         }
     
         return self::$_instance;

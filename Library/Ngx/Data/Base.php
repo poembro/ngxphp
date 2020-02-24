@@ -20,7 +20,12 @@ class Base
      */
     private static $_conn = []; 
 
-    final private function getconfig($key)
+    /**
+     * 获取配置
+     * @return 配置|array
+     * @throws Exception
+     */
+    final private function _getconfig($key)
     {
         if (!$key)
         {
@@ -29,6 +34,10 @@ class Base
         return Config::get($key); 
     }
     
+    /**
+     * 获取mysql对象
+     * @return mysql对象|\PDO 
+     */
     final public function mysql($key = 'mysql') 
     {
         if (isset(self::$_conn[$key]))
@@ -36,12 +45,16 @@ class Base
             return self::$_conn[$key];
         }
         
-        $conf = $this->getconfig($key);
-        self::$_conn[$key] = new Pdo($conf);
-        
+        $conf = $this->_getconfig($key);
+
+        self::$_conn[$key] = new Pdo($conf); 
         return self::$_conn[$key];
     }
-    
+
+    /**
+     * 获取redis对象
+     * @return redis对象|\Rdb 
+     */
     final public function redis($key = 'redis')
     {
         if (isset(self::$_conn[$key]))
@@ -49,7 +62,7 @@ class Base
             return self::$_conn[$key];
         }
         
-        $conf = $this->getconfig($key);
+        $conf = $this->_getconfig($key);
         
         self::$_conn[$key] = Rdb::getInstance($conf);
         return self::$_conn[$key];

@@ -27,8 +27,8 @@ class Rdb extends Schema
         'host'       => '127.0.0.1',
         'port'       => 6379,
         'lifetime'   => 3600,  /*缓存生命周期*/
-        'persistent' => true, /*是否使用持久链接*/
-        'options'    => null,    /*设置选项*/
+        'persistent' => true,  /*是否使用持久链接*/
+        'options'    => null,  /*设置选项*/
         'auth'       => null,
         'servers'    => null
     ];
@@ -65,10 +65,13 @@ class Rdb extends Schema
         }
         return self::$_instance;
     }
-    
+
     /**
-     * @param array $policy
-     */
+     * @desc   初始化配置
+     * @access public 
+     * @param  array $policy 
+     * @return void
+     */ 
     public function __construct(array $policy)
     {
         $this->_policy = array_merge($this->_policy, $policy); 
@@ -113,11 +116,9 @@ class Rdb extends Schema
 
     /**
      * @desc   调用连接实例的函数
-     * @access public
-     *
+     * @access public 
      * @param string $method 函数名称
-     * @param array  $params 参数组
-     *
+     * @param array  $params 参数组 
      * @return unknown type
      */
     public function __call($method, $params)
@@ -127,13 +128,11 @@ class Rdb extends Schema
     }
 
     /**
-     * @desc   关闭或者销毁实例和链接
-     * @access void
-     *
-     * @param void
-     *
+     * @desc 关闭或者销毁实例和链接
+     * @access public 
+     * @param  void 
      * @return void
-     */
+     */ 
     public function close()
     {
         $this->connect()->close();

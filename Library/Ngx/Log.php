@@ -15,7 +15,7 @@ class Log
      * @var array
      * @access private
      */
-    private static $log = array();
+    private static $log = [];
     
     /**
      * @desc 添加语句执行信息

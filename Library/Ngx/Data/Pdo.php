@@ -70,7 +70,7 @@ class Pdo extends Schema
         $dns .= ';dbname=' . $config['dbname']; 
         try
         {
-            $this->_conn = new \PDO($dns, $config['username'], $config['password'], $options);
+            $this->_conn = @new \PDO($dns, $config['username'], $config['password'], $options);
         }
         catch (\Exception $e)
         { 
@@ -79,35 +79,36 @@ class Pdo extends Schema
 
         $this->addQuery('连接...' . $dns);
         $this->query('SET NAMES UTF8'); 
-        $this->_conn->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER); 
+        $this->_conn->setAttribute(\PDO::ATTR_PERSISTENT, true);
+        $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->_conn->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER); //将所有字段都小写显示
         
         return $this->_conn;
     }
-  
+
     /**
-     * @desc  格式化用于数据库的字符串
-     * @access： public
-     * 注意:这个函数与PDO中的不一样,它不会自动加 "'"
-     * @param string $str
+     * @desc   格式化用于数据库的字符串
+     * @access public 
+     * @param  string $str 
      * @return string
      */
     public function escape($str)
     {
-        //$str = mysql_real_escape_string($str);
+        //$str = mysqli_real_escape_string($this->_conn, $str);
         return $str;
     }
 
-    
     /**
-     * 执行 SQL
-     * @return \PDOStatement
+     * @desc   执行 SQL
+     * @access public 
+     * @param  string $sql 
+     * @return PDOStatement
      */
     public function query($sql)
-    {
-        $sql = $this->escape($sql); 
+    { 
         $connect = $this->connect();
-        $this->_query = $connect->query($sql);
-        if (! $this->_query)
+        $_query = $connect->query($sql);
+        if (! $_query)
         {
             $errInfo = $connect->errorInfo();
             if ((in_array($errInfo[1], array(2006, 2013))) && ($this->_relink < 3))
@@ -124,34 +125,75 @@ class Pdo extends Schema
             $this->_relink = 0;
         }
         $this->addQuery($sql);
-        return $this->_query;
+        
+        return $_query;
     }
     
+
+    /**
+     * @desc   获取所有
+     * @access public 
+     * @param  string $sql 
+     * @param  int $fetch_style 
+     * @return void
+     */
     public function fetchAll($sql, $fetch_style = \PDO::FETCH_ASSOC )
     {
         return $this->query($sql)->fetchAll($fetch_style);
     }
      
+    /**
+     * @desc   获取一条
+     * @access public 
+     * @param  string $sql 
+     * @param  int $fetch_style 
+     * @return void
+     */
     public function fetch($sql, $fetch_style = \PDO::FETCH_ASSOC )
     { 
         return $this->query($sql)->fetch($fetch_style);
     }
     
+    /**
+     * @desc   更新
+     * @access public 
+     * @param  string $sql 
+     * @return void
+     */
     public function update($sql)
     { 
         return $this->query($sql)->rowCount();
     }
     
+    /**
+     * @desc   新增
+     * @access public 
+     * @param  string $sql 
+     * @return void
+     */
     public function insert($sql)
-    { 
+    {
         return $this->query($sql) ? $this->connect()->lastInsertId() : null;
     }
 
+    /**
+     * @desc   关闭连接
+     * @access public 
+     * @param  void 
+     * @return void
+     */
     public function close()
     {
         unset($this->_conn);
     }
 
+    /**
+     * @desc   处理插入语句
+     * @access public 
+     * @param  string $table 
+     * @param  array $dataArray 
+     * @return void
+     */
     public function write($table, $dataArray) 
     {
         $field = "";
@@ -163,35 +205,46 @@ class Pdo extends Schema
         
         foreach ($dataArray as $key => $val)
         {
-            $field .="$key,";
-            $value .="'$val',";
+            $val = $this->escape($val); 
+            $field .= $key . ',';
+            $value .= "'" . $val . "',";
         }
 
         $field = substr($field, 0, -1);
         $value = substr($value, 0, -1);
-        $sql = "insert into $table($field) values($value)"; 
+        $sql = 'insert into ' . $table . '(' . $field . ')values(' . $value . ')'; 
 
         $res = $this->insert($sql);
         // var_dump($res);
         return $res;
     }
   
-    public function change($table, $dataArray, $condition="") 
+    /**
+     * @desc   处理更新语句
+     * @access public 
+     * @param  string $table 
+     * @param  array $dataArray 
+     * @param  string $condition 
+     * @return void
+     */
+    public function change($table, $dataArray, $condition = "") 
     {
         if( !is_array($dataArray) || count($dataArray)<=0) 
         {
             return false;
         }
-        $value = "";
+        $str = ""; 
         foreach ($dataArray as $key => $val)
         {
-            $value .= "$key = '$val',";
+            $val = $this->escape($val); 
+            $str .= $key . "='" . $val . "',";
         }
-        $value .= substr( $value,0,-1);
-        $sql = "update $table set $value where 1=1 and $condition";
+
+        $str = substr($str, 0, -1);
+        $sql = 'update ' . $table . ' set ' . $str . ' where 1=1 and ' . $condition;
         
         $res = $this->update($sql);
-        // var_dump($res);
+        // var_dump($res); 
         return $res;
     }
 }

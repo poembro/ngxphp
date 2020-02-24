@@ -12,8 +12,16 @@ abstract class Schema
     /**
      * @desc 添加语句执行信息
      * @access public
-     * @param string $sql sql语句
+     * @param string $msg 语句
      * @return void
      */
-    abstract protected function addQuery($msg);
+    abstract public function addQuery($msg);
+
+    /**
+     * @desc   开始连接
+     * @access public 
+     * @param  void 
+     * @return bool
+     */
+    abstract public function connect();
 }

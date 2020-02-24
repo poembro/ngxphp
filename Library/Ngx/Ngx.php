@@ -6,23 +6,10 @@
  * @Description 框架核心  
  */
 namespace Ngx;
-   
-use \Ngx\Request;
-use \Ngx\Response;
-use \Ngx\Config;
 
 class Ngx
 {
-    public static $req = NULL;
-    public static $res = NULL; 
-    public static $view = NULL;
     private static $_instance = NULL;
-    
-    public function __construct()
-    {
-        Import::addLibrary(FRAMEWORK_PATH, 'Ngx');
-        Import::addLibrary(APPLICATION_PATH, 'App');
-    }
     
     public static function getInstance()
     {
@@ -36,64 +23,58 @@ class Ngx
 
     public function init($path) 
     {
-        Config::getInstance($path);
-        self::$req = Request::getInstance(); 
-        self::$res = Response::getInstance();  
+        Config::init($path);
         //more TODO
         return $this;
     }
-
-    private function _parseURL($url)
+    
+    private function _router()
     {
-        $url = empty($url) ? '/' : strtolower($url); 
-        if ($url !== '/')
+        $router = Router::getInstance(); 
+        $rules = $router->getRule();
+        if (!empty($rules)) 
         {
-            $url = str_replace('/', ' ', $url);
-            $segments = explode(' ', trim($url));
-            if (count($segments) < 2 || count($segments) > 100)
-            {
-                throw new \Exception('url parse error!'); 
-            }
-            return $segments;
+            return $rules;
         }
         
-        return $this->_parseURL(Config::get('ext.defaultAction'));
+        $uri = Config::get('ext.defaultAction');
+        return $router->setRule($uri);
     }
-    
-    public function run($url) 
+
+    private function _dispatch($rules)
     {
-        try
+        $num = count($rules);
+        if ($num < 2 || $num > 100) 
         {
-            $frags = $this->_parseURL($url);
-            $method = array_pop($frags);
-            $action = implode('\\', array_map('ucfirst', $frags));
-            $className = 'App\Controllers\\' . $action;
-            
-            if (!class_exists($className, true))
-            {
-                throw new \Exception('controller not found!');
-            }
-
-            if (!method_exists($className, $method))
-            {
-                throw new \Exception('method not found!');
-            }
-            
-            $object = new $className(self::$req, self::$res);
-            return call_user_func_array([$object, $method], [self::$req, self::$res]);
+            throw new \Exception(' URL Exception!');  
         }
-        catch (\Exception $e)
+
+        array_unshift($rules,  'App', 'Controllers'); 
+
+        $method = array_pop($rules); 
+
+        $className = implode('\\', array_map('ucfirst', $rules));
+        if (!class_exists($className, true))
         {
-            $errMsg = '<html><head><title>error!</title></head><body bgcolor="white" text="black"><center>';
-            $errMsg .= '<h1>' . $e->getFile() . ' line: ' . $e->getLine() . '</h1>';
-            $errMsg .= '<h1>' . $e->getMessage() . '</h1>';
-            $errMsg .= '</center></body></html>';
-
-            if (Config::get('ext')['env'] === 'dev')
-            {
-                echo $errMsg;
-            }
+            throw new \Exception($className . ' Controller not found!');
         }
+
+        if (!method_exists($className, $method))
+        {
+            throw new \Exception($method . ' Method not found!');
+        }
+
+        $req = Request::getInstance(); 
+        $res = Response::getInstance(); 
+
+        $object = new $className($req, $res);
+        return call_user_func_array([$object, $method], [$req, $res]);
+    }
+
+    public function run() 
+    {
+        $rules = $this->_router();  
+        $this->_dispatch($rules);
     }
 }
 
