@@ -9,12 +9,14 @@
 
 ### 介绍
 
-- 本项目适合所有PHPer，太简洁了轻松掌握整个框架的运作；
+- 在写过nodejs golang java lua c/c++ php等语言后,个人非常排斥/反感语言框架带来的学习成本,于是在极度缩减代码量的情况写了此项目，用来快速进行web类型的项目开发。(掌握后3-5个类文件,即可定制一个自己的MVC)
 
  
+### 使用
+
+- cli 方式：  /usr/bin/php front/App/Public/index.php /login/test
+- fastcgi 方式: http://localhost/login/test
  
  
- 
- 
- 
+
  
