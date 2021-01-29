@@ -13,7 +13,7 @@
     <?php } ?>
     
     <nav class="pagination">
-   	    <?php  include  dirname(__DIR__).'/mg/page.php';?>   	 
+           <?php  include  dirname(__DIR__).'/mg/page.php';?>        
     </nav> 
 </body>
 
