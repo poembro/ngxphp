@@ -12,6 +12,7 @@ class View
     private $_variables = array ();
     private $_cacheContents;
     private $_templateFolder;
+    
     private static $_instance;
    
     public static function getInstance()

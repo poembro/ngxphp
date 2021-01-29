@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @Copyright (C),
  * @Author poembro
@@ -11,12 +12,11 @@ define("APPLICATION_PATH", dirname(dirname(__DIR__)) . DS .'App' . DS);
 define('UTF8_ENABLED', FALSE); 
 error_reporting(E_ALL & ~E_NOTICE);    
 
-$charset = 'UTF-8';
-ini_set('default_charset', $charset); //设置默认字符集 
+ini_set('default_charset', 'UTF-8'); //设置默认字符集 
 ini_set('date.timezone','Asia/Shanghai');
 if (extension_loaded('mbstring'))
 {
-    @ini_set('mbstring.internal_encoding', $charset); 
+    @ini_set('mbstring.internal_encoding', 'UTF-8'); 
     mb_substitute_character('none');
 }
 
@@ -27,11 +27,15 @@ function _main()
         include FRAMEWORK_PATH . 'Ngx.php';
         Ngx\Import::addLibrary(FRAMEWORK_PATH, 'Ngx');
         Ngx\Import::addLibrary(APPLICATION_PATH, 'App');
-        Ngx\Import::addLibrary(dirname(APPLICATION_PATH) . DS .'Sdk' . DS, 'Sdk'); 
+        // Ngx\Import::addLibrary(dirname(APPLICATION_PATH) . DS .'Sdk' . DS, 'Sdk'); 
+        // Ngx\Import::addLibrary(dirname(APPLICATION_PATH) . DS .'Firebase' . DS, 'Firebase'); 
 
         Ngx\Ngx::getInstance()
             ->init(APPLICATION_PATH . 'Config/Main.php')
             ->run();
+ 
+        $filename = APPLICATION_PATH . date('Ymd') . 'login.log';
+        Ngx\Log::outlog($filename);
     }
     catch (\Exception $e)
     {
@@ -50,7 +54,4 @@ function _main()
         echo json_encode($data);
     }
 }
-$t1=microtime(true); //获取程序1，开始的时间 
 _main();
-$t2=microtime(true); //获取程序1，结束的时间
-echo $t2-$t1;

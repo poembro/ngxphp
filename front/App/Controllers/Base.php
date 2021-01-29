@@ -17,7 +17,7 @@ class Base
     
     public function __construct($req, $res)
     {
-        $request_url = $req->get('PATH_INFO');
+        $request_url = $req->getRawUrl();
     }
      
     /**
@@ -54,14 +54,6 @@ class Base
         $callback = trim($callback);
         $string = ($callback != '') ? "try{\n" . $callback . '(' . json_encode($data, JSON_UNESCAPED_UNICODE) . ");\n}catch(e){}\n" : json_encode($data, JSON_UNESCAPED_UNICODE);
         echo $string;
-        exit();
     }
-    
-    public function __destruct()
-    {
-        if (\Ngx\Config::get('ext')['debug'])
-        {
-            print_r(\Ngx\Log::getQuery());
-        }
-    }
+
 }

@@ -4,7 +4,6 @@
  * @Author poembro
  * @Date: 2017-11-08 12:37:46
  * @Description Request 请求参数类
- * @Reference CodeIgniter
  */
 namespace Ngx;
 
@@ -131,7 +130,7 @@ class Request
         } while ($count);
 
 		return $str;
-    } 
+    }
 
 	/**
 	 * @desc 获取完整URL

@@ -34,13 +34,6 @@ class Rdb extends Schema
     ];
 
     /**
-     * @desc View当前实例
-     * @var View
-     * @access private
-     */
-    private static $_instance;
-    
-    /**
      * @desc 添加语句执行信息
      * @access public
      * @param string $sql sql语句
@@ -49,21 +42,6 @@ class Rdb extends Schema
     public function addQuery($msg)
     {
         Log::addQuery($msg,  __CLASS__);
-    }
-
-    /**
-     * @desc 获取当前视图实例
-     * @access public
-     * @param void
-     * @return View
-     */
-    public static function getInstance(array $policy)
-    {
-        if (! self::$_instance)
-        {
-            self::$_instance = new self($policy);
-        }
-        return self::$_instance;
     }
 
     /**
@@ -103,14 +81,22 @@ class Rdb extends Schema
             $conn->connect($policy['host'], $policy['port'], $policy['lifetime']);
         }
 
+        if (isset($policy['auth']) && !empty($policy['auth']))
+        {
+            $conn->auth($policy['auth']);
+        }
+
         $this->_conn = $conn;
-        $options = [];
+        /**
+        $options = $policy['options'];
         //$options[\Redis::OPT_SERIALIZER] = \Redis::SERIALIZER_IGBINARY;  加上这句就502
         foreach ($options as $k => $v) 
         {
             $conn->setOption($k, $v);
         }
+        */
         $this->addQuery('连接...' . print_r($policy, true));
+
         return $conn;
     }
 

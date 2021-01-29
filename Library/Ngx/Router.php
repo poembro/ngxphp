@@ -4,7 +4,6 @@
  * @Author poembro
  * @Date: 2017-11-08 12:37:46
  * @Description Router  请求参数类
- * @Reference CodeIgniter
  */
 namespace Ngx;
 
@@ -112,7 +111,7 @@ class Router
 
 
 	protected function _set_uri_string($str)
-	{ 
+	{
 		$str = $this->remove_invisible_characters($str, FALSE);
 		$this->uri_string = trim($str, '/'); 
 		if ($this->uri_string !== '')
@@ -147,7 +146,7 @@ class Router
  
 	public function filter_uri(&$str)
 	{
-		if ( ! empty($str) && ! preg_match('/^['.$this->_permitted_uri_chars.']+$/i'.(UTF8_ENABLED ? 'u' : ''), $str))
+		if ( ! empty($str) && ! preg_match('/^[' . $this->_permitted_uri_chars . ']+$/i' . (UTF8_ENABLED ? 'u' : ''), $str))
 		{
 			throw new \Exception('The URI you submitted has disallowed characters.', 400);
 		}

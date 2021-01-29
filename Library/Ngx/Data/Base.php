@@ -64,7 +64,7 @@ class Base
         
         $conf = $this->_getconfig($key);
         
-        self::$_conn[$key] = Rdb::getInstance($conf);
+        self::$_conn[$key] = new Rdb($conf);
         return self::$_conn[$key];
     }
 }

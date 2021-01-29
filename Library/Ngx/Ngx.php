@@ -31,6 +31,7 @@ class Ngx
     private function _router()
     {
         $router = Router::getInstance(); 
+        
         $rules = $router->getRule();
         if (!empty($rules)) 
         {

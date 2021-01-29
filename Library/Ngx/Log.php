@@ -3,7 +3,7 @@
  * @Copyright (C),
  * @Author poembro
  * @Date: 2017-11-08 12:37:46
- * @Description Request 日志类
+ * @Description Request 请求参数类
  */
 namespace Ngx;
 
@@ -36,6 +36,18 @@ class Log
     public static function getQuery()
     {
         return self::$log;
+    }
+
+    public static function outlog($filename)
+    { 
+        $logarr = static::getQuery();
+        if (empty($logarr)) 
+        {
+            return false;
+        }
+        
+        file_put_contents($filename, print_r($logarr, true) . "\n", FILE_APPEND);
+        return true;
     }
 }
  
