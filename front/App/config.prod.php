@@ -1,19 +1,13 @@
 <?php
-/**
- * @Copyright (C),
- * @Author poembro
- * @Date: 2017-11-08 12:37:46
- * @Description Config 配置文件
- */
 return [
-    'ext' => [
-        'defaultAction' => '/login/test',
+    'sys' => [
+        'defaultAction' => '/login/index',
         'view' =>  APPLICATION_PATH . 'View',
-        'debug' => false,
+        'debug' => true,
         'env' => 'dev' // production
     ],
     'app' => [
-                        
+              
     ],
     'redis' => [
         'host'       => '127.0.0.1',
@@ -21,17 +15,25 @@ return [
         'lifetime'   => 3600,
         'persistent' => true,
         'options'    => null,
-        'auth'       => null,
+        'auth'       => "",
         'servers'    => null
     ],
+     
     'mysql' => [
         'adapter'  => 'Mysql',
-        'hostname'     => '127.0.0.1',
+        'hostname' => '127.0.0.1',
         'port'     => 3306,
         'username' => 'root',
         'password' => '123456',
-        'dbname'   => 'test2',
+        'dbname'   => 'xxxxxx',
         'charset'  => 'utf8',
         'pconnect' => true
-    ] 
+    ],
+    'oss' =>[
+        'access_id'     => 'xxx',
+        'access_key'    => 'xxx',
+        'bucket'        => 'fhgames',
+        'endpoint'      => 'http://xxx.aliyuncs.com', 
+        'path' => 'xxx/xxx',
+     ],
 ];

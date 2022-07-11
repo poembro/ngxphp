@@ -1,7 +1,7 @@
 <?php  
 /**
  * @Copyright (C),
- * @Author poembro
+ * @Author 张三
  * @Date: 2017-11-08 12:37:46
  * @Description Config 配置文件处理
  */
@@ -26,7 +26,7 @@ class Config
     {
         if (!is_file($filepath))
         {
-            throw new \Exception('找不到名为:' . $filepath . '的配置文件');
+            throw new \Exception('not find:' . $filepath);
         }
 
         self::$_conf = include_once $filepath;

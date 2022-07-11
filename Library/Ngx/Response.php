@@ -1,7 +1,7 @@
 <?php 
 /**
  * @Copyright (C),
- * @Author poembro
+ * @Author 张三
  * @Date: 2017-11-08 12:37:46
  * @Description Response 响应处理类
  */
@@ -14,7 +14,7 @@ class Response
  
     private function __construct()
     {
-        $path = Config::get('ext.view');
+        $path = Config::get('sys.view');
         $this->view = View::getInstance();
         $this->view->setTemplateFolder($path);
     }

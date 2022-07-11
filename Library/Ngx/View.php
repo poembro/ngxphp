@@ -1,7 +1,7 @@
 <?php 
 /**
  * @Copyright (C),
- * @Author poembro
+ * @Author 张三
  * @Date: 2017-11-08 12:37:46
  * @Description View 视图处理类
  */
@@ -55,7 +55,7 @@ class View
         
         if (! is_file($path))
         {
-            throw new \Exception($path . '不存在或者不是一个文件!');
+            throw new \Exception('not find : ' . $path );
         }
         
         extract($this->_variables, EXTR_SKIP);

@@ -1,15 +1,14 @@
 <?php 
 /**
  * @Copyright (C),
- * @Author poembro
+ * @Author 张三
  * @Date: 2017-11-08 12:37:46
  * @Description Request 请求参数类
  */
 namespace Ngx;
 
 class Log
-{ 
-
+{
     /**
      * 日志
      * @var array
@@ -25,7 +24,12 @@ class Log
      */
     public static function addQuery($msg, $classname)
     {
-        array_push(self::$log, [$msg,  $classname]);
+        if (!Config::$_conf['sys']['debug']) 
+        {
+            return false;
+        }
+        array_push(self::$log, [$msg, $classname]);
+        return true;
     }
     
     /**
@@ -38,15 +42,15 @@ class Log
         return self::$log;
     }
 
-    public static function outlog($filename)
-    { 
-        $logarr = static::getQuery();
-        if (empty($logarr)) 
+    public static function outlog($_path)
+    {
+        if (!Config::$_conf['sys']['debug']) 
         {
             return false;
         }
-        
-        file_put_contents($filename, print_r($logarr, true) . "\n", FILE_APPEND);
+        $filename = $_path . date('Ymd') . '.log';
+        $msg = print_r(static::getQuery(), true);
+        file_put_contents($filename, $msg . "\n", FILE_APPEND);
         return true;
     }
 }

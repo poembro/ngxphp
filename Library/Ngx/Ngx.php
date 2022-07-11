@@ -1,7 +1,7 @@
 <?php  
 /**
  * @Copyright (C), 
- * @Author poembro 
+ * @Author 张三 
  * @Date: 2017-11-08 12:37:46
  * @Description 框架核心  
  */
@@ -21,11 +21,17 @@ class Ngx
         return self::$_instance;
     }
 
-    public function init($path) 
+    public function init($conf) 
     {
-        Config::init($path);
-        //more TODO
+        Config::init($conf);
+        //more TODO 
         return $this;
+    }
+
+    public function run() 
+    {
+        $rules = $this->_router();  
+        $this->_dispatch($rules); 
     }
     
     private function _router()
@@ -38,7 +44,7 @@ class Ngx
             return $rules;
         }
         
-        $uri = Config::get('ext.defaultAction');
+        $uri = Config::get('sys.defaultAction');
         return $router->setRule($uri);
     }
 
@@ -51,7 +57,6 @@ class Ngx
         }
 
         array_unshift($rules,  'App', 'Controllers'); 
-
         $method = array_pop($rules); 
 
         $className = implode('\\', array_map('ucfirst', $rules));
@@ -72,17 +77,12 @@ class Ngx
         return call_user_func_array([$object, $method], [$req, $res]);
     }
 
-    public function run() 
-    {
-        $rules = $this->_router();  
-        $this->_dispatch($rules);
-    }
 }
 
 
 /**
  * @Copyright (C),
- * @Author poembro
+ * @Author 张三
  * @Date: 2017-11-08 12:37:46
  * @Description 自动加载类
  */
@@ -122,6 +122,7 @@ class Import
             return false;
         }
         $path = self::$_libs[$libName] . implode(DS, $params) . '.php';
+        //var_dump($path);
         if (! is_file($path))
         {
             $path = dirname($path);

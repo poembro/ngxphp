@@ -1,7 +1,7 @@
 <?php
 /**
  * @Copyright (C),
- * @Author poembro
+ * @Author 张三
  * @Date: 2017-11-08 12:37:46
  * @Description Mysql PDO封装
  */
@@ -65,7 +65,7 @@ class Pdo extends Schema
             return $this->_conn;
         }
         $config = $this->_policy;  
-        $options = (bool)$config['pconnect'] ? array ( \PDO::ATTR_PERSISTENT => true) : array ();  
+        $options = (bool)$config['pconnect'] ? [\PDO::ATTR_TIMEOUT => 5, \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION, \PDO::ATTR_PERSISTENT => true] : [];  
         $dns = 'mysql:host=' . $config['hostname'] . ';port=' . $config['port'];
         $dns .= ';dbname=' . $config['dbname']; 
         try
@@ -74,6 +74,7 @@ class Pdo extends Schema
         }
         catch (\Exception $e)
         { 
+
             throw new \Exception($e->getMessage());
         }
 
@@ -81,7 +82,7 @@ class Pdo extends Schema
         $this->query('SET NAMES UTF8'); 
         $this->_conn->setAttribute(\PDO::ATTR_PERSISTENT, true);
         $this->_conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->_conn->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_LOWER); //将所有字段都小写显示
+        $this->_conn->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_NATURAL); //CASE_LOWER 将所有字段都小写显示
         
         return $this->_conn;
     }
@@ -105,7 +106,8 @@ class Pdo extends Schema
      * @return PDOStatement
      */
     public function query($sql)
-    { 
+    {
+        //print_r($sql);
         $connect = $this->connect();
         $_query = $connect->query($sql);
         if (! $_query)
@@ -212,7 +214,7 @@ class Pdo extends Schema
 
         $field = substr($field, 0, -1);
         $value = substr($value, 0, -1);
-        $sql = 'insert into ' . $table . '(' . $field . ')values(' . $value . ')'; 
+        $sql = 'INSERT INTO ' . $table . '(' . $field . ')VALUES(' . $value . ')'; 
 
         $res = $this->insert($sql);
         // var_dump($res);
@@ -241,10 +243,9 @@ class Pdo extends Schema
         }
 
         $str = substr($str, 0, -1);
-        $sql = 'update ' . $table . ' set ' . $str . ' where 1=1 and ' . $condition;
+        $sql = 'UPDATE ' . $table . ' SET ' . $str . ' where 1=1 and ' . $condition;
         
         $res = $this->update($sql);
-        // var_dump($res); 
         return $res;
     }
 }
